@@ -7,7 +7,7 @@ Authors@R:
            role = c("aut", "cre"),
            email = "adam.ivison@nhs.net")
 Description: Helper package for common NHSBSA R actions.
-License: MIT + file LICENSE
+License: Apache License (>= 2)
 URL: https://gitlab.cloud.nhsbsa.nhs.uk/insight/shared/nhsbsR
 BugReports: https://gitlab.cloud.nhsbsa.nhs.uk/insight/shared/nhsbsR/-/issues
 Encoding: UTF-8
