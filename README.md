@@ -11,6 +11,6 @@ Helper package for common NHSBSA R actions:
 If you do not have the devtools package installed, you will have to run the first line in the code below as well.
 
 ```
-# install.packages("devtools"")
-devtools::install_github("nhsbsa-data-analytics/nhsbsaR"")
+# install.packages("devtools")
+devtools::install_github("nhsbsa-data-analytics/nhsbsaR")
 ```
