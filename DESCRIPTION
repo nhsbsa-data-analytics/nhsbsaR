@@ -1,0 +1,26 @@
+Package: nhsbsaR
+Title: NHSBSA R package
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Adam",
+           family = "Ivison",
+           role = c("aut", "cre"),
+           email = "adam.ivison@nhs.net")
+Description: Helper package for common NHSBSA R actions.
+License: Apache License (>= 2)
+URL: https://gitlab.cloud.nhsbsa.nhs.uk/insight/shared/nhsbsR
+BugReports: https://gitlab.cloud.nhsbsa.nhs.uk/insight/shared/nhsbsR/-/issues
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+Depends: 
+    R (>= 3.2.0)
+Imports: 
+    DBI,
+    odbc,
+    dbplyr,
+    ggplot2,
+    highcharter
+Remotes: 
+    nhs-r-community/nhsrtheme
