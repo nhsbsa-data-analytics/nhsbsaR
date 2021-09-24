@@ -2,7 +2,7 @@
 
 Helper package for common NHSBSA R actions:
 
-* Colour / theme static (`{ggplot2}`) and interactive (`{highcarter}`) charts to suit NHS and NHSBSA guidelines
+* Colour / theme static (`{ggplot2}`) and interactive (`{highcharter}`) charts to suit NHS and NHSBSA guidelines
 
 * Create reports or presentation slides that follow NHSBSA guidelines (upcoming)
 
