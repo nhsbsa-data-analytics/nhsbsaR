@@ -46,10 +46,11 @@ theme_nhsbsa_gg <- function(plot, family = "sans") {
 
     # Make the font of any text "sans" or another `family` parameter,
     # colour any text NHS Black and make it size 12
-    text = ggplot2::element_text(
+    text = ggtext::element_textbox_simple(
       color = "#231f20", 
       family = family, 
-      size = 12
+      size = 12,
+      halign = 0.5
     ),
 
     # Colour background NHS White
@@ -57,14 +58,13 @@ theme_nhsbsa_gg <- function(plot, family = "sans") {
 
     # Make all titles bold (hack to make axis and legend titles bold if they
     # are added later)
-    title = ggplot2::element_text(face = "bold"),
+    title = ggtext::element_textbox_simple(face = "bold"),
 
-    # Make the title centered and automatically split over multiple lines
-    plot.title = ggtext::element_textbox_simple(halign = 0.5),
-
-    # Un-bold and left align the subtitle and automatically split over 
-    # multiple lines
-    plot.subtitle = ggtext::element_textbox_simple(face = "plain"),
+    # Un-bold and left align the subtitle
+    plot.subtitle = ggtext::element_textbox_simple(
+      face = "plain", 
+      halign = NULL
+    ),
 
     # Un-bold the caption
     plot.caption = ggplot2::element_text(face = "plain"),
@@ -77,7 +77,7 @@ theme_nhsbsa_gg <- function(plot, family = "sans") {
     legend.key = ggplot2::element_blank(),
 
     # Remove axis ticks and colour axis lines NHS Mid Grey
-    axis.text.x = ggplot2::element_text(margin = ggplot2::margin(t = 0)),
+    axis.text.x = ggtext::element_textbox_simple(margin = ggplot2::margin(t = 0)),
     axis.ticks = ggplot2::element_blank(),
     axis.line = ggplot2::element_line(color = "#768692"),
 
@@ -86,7 +86,7 @@ theme_nhsbsa_gg <- function(plot, family = "sans") {
 
     # For facets, bold and left align the titles and colour the panel background
     # white
-    strip.text = ggplot2::element_text(face = "bold", hjust = 0),
+    strip.text = ggtext::element_textbox_simple(face = "bold", halign = NULL),
     strip.background = ggplot2::element_rect(fill = "#FFFFFF")
 
   )
