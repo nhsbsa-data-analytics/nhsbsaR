@@ -44,9 +44,13 @@ theme_nhsbsa_gg <- function(plot, family = "sans") {
 
   ggplot2::theme(
 
-    # Make the font of any text "sans" or another `family` parameter and
-    # colour any text NHS Black
-    text = ggplot2::element_text(color = "#231f20", family = family),
+    # Make the font of any text "sans" or another `family` parameter,
+    # colour any text NHS Black and make it size 12
+    text = ggplot2::element_text(
+      color = "#231f20", 
+      family = family, 
+      size = 20
+    ),
 
     # Colour background NHS White
     panel.background = ggplot2::element_rect(fill = "#FFFFFF"),
@@ -55,8 +59,8 @@ theme_nhsbsa_gg <- function(plot, family = "sans") {
     # are added later)
     title = ggplot2::element_text(face = "bold"),
 
-    # Make the title centered
-    plot.title = ggplot2::element_text(hjust = 0.5),
+    # Make the title centered and automatically split over multiple lines
+    plot.title = ggtext::element_textbox_simple(halign = 0.5),
 
     # Un-bold and left align the subtitle
     plot.subtitle = ggplot2::element_text(face = "plain", hjust = 0),
