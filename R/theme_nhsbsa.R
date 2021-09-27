@@ -43,52 +43,47 @@
 theme_nhsbsa_gg <- function(plot, family = "sans") {
 
   ggplot2::theme(
-
-    # Make the font of any text "sans" or another `family` parameter,
-    # colour any text NHS Black and make it size 12
-    text = ggtext::element_textbox_simple(
-      color = "#231f20", 
-      family = family, 
-      size = 12,
-      halign = 0.5
-    ),
-
+    
+    # Make the font of any text "sans" or another `family` parameter and
+    # colour any text NHS Black and size 10
+    text = ggplot2::element_text(family = family, color = "#231f20", size = 10),
+    
     # Colour background NHS White
     panel.background = ggplot2::element_rect(fill = "#FFFFFF"),
-
+    
     # Make all titles bold (hack to make axis and legend titles bold if they
-    # are added later)
-    title = ggtext::element_textbox_simple(face = "bold"),
-
+    # are added later) and size 12
+    title = ggplot2::element_text(face = "bold", size = 12),
+    
+    # Make the title centered
+    plot.title = ggplot2::element_text(hjust = 0.5),
+    
     # Un-bold and left align the subtitle
-    plot.subtitle = ggtext::element_textbox_simple(
-      face = "plain", 
-      halign = NULL
-    ),
-
+    plot.subtitle = ggplot2::element_text(face = "plain", hjust = 0),
+    
     # Un-bold the caption
     plot.caption = ggplot2::element_text(face = "plain"),
-
+    
     # Move the legend to the top with no background or key background
     # Note: the legend may need manual tweaking based on plot coordinates
     legend.position = "top",
     legend.title = ggplot2::element_blank(),
     legend.background = ggplot2::element_blank(),
     legend.key = ggplot2::element_blank(),
-
+    
     # Remove axis ticks and colour axis lines NHS Mid Grey
-    axis.text.x = ggtext::element_textbox_simple(margin = ggplot2::margin(t = 0)),
+    axis.text.x = ggplot2::element_text(margin = ggplot2::margin(t = 0)),
     axis.ticks = ggplot2::element_blank(),
     axis.line = ggplot2::element_line(color = "#768692"),
-
+    
     # Remove all gridlines
     panel.grid = ggplot2::element_blank(),
-
+    
     # For facets, bold and left align the titles and colour the panel background
     # white
-    strip.text = ggtext::element_textbox_simple(face = "bold", halign = NULL),
+    strip.text = ggplot2::element_text(face = "bold", hjust = 0),
     strip.background = ggplot2::element_rect(fill = "#FFFFFF")
-
+    
   )
 
 }
