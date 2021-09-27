@@ -49,7 +49,7 @@ theme_nhsbsa_gg <- function(plot, family = "sans") {
     text = ggplot2::element_text(
       color = "#231f20", 
       family = family, 
-      size = 20
+      size = 12 / .pt
     ),
 
     # Colour background NHS White
@@ -62,8 +62,9 @@ theme_nhsbsa_gg <- function(plot, family = "sans") {
     # Make the title centered and automatically split over multiple lines
     plot.title = ggtext::element_textbox_simple(halign = 0.5),
 
-    # Un-bold and left align the subtitle
-    plot.subtitle = ggplot2::element_text(face = "plain", hjust = 0),
+    # Un-bold and left align the subtitle and automatically split over 
+    # multiple lines
+    plot.subtitle = ggtext::element_textbox_simple(face = "plain"),
 
     # Un-bold the caption
     plot.caption = ggplot2::element_text(face = "plain"),
