@@ -21,8 +21,6 @@ Imports:
     odbc,
     dbplyr,
     ggplot2,
-    highcharter,
-    ggtext,
-    Rcpp (>= 1.0.7)
+    highcharter
 Remotes: 
     nhs-r-community/nhsrtheme
