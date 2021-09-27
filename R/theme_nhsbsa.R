@@ -49,7 +49,7 @@ theme_nhsbsa_gg <- function(plot, family = "sans") {
     text = ggplot2::element_text(
       color = "#231f20", 
       family = family, 
-      size = 12 / ggplot2::.pt
+      size = 12
     ),
 
     # Colour background NHS White
