@@ -151,7 +151,10 @@ theme_nhsbsa_hc <- function(family = "TT Arial") {
 
       # Bold yaxis title
       title = list(style = list(fontWeight = "bold")),
-
+      
+      # Add yaxis line
+      lineWidth = 1,
+      
       # Colour yaxis ticks and lines NHS Mid Grey
       lineColor = "#768692",
       tickColor = "#768692",
