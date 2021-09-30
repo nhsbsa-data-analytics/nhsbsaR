@@ -26,11 +26,11 @@ palette_nhsbsa <- function(palette = NA, reverse = FALSE) {
     }
 
     if (palette == "gradient") {
-      names <- c("LightBlue", "DarkBlue")
+      names <- c("White", "DarkBlue") # White is custom
     }
 
     if (palette == "highlight") {
-      names <- c("PaleGrey", "DarkBlue")
+      names <- c("LightGrey", "DarkBlue") # LightGrey is custom
     }
 
   } else {
@@ -54,8 +54,13 @@ palette_nhsbsa <- function(palette = NA, reverse = FALSE) {
     names <- rev(names)
   }
 
-  # Get the NHS identity hex colour for each name
-  colours <- nhsrtheme::get_nhs_colours()[names]
+  # Get the NHS identity hex colour for each name (with a couple of custom 
+  # colours added)
+  colours <- c(
+    nhsrtheme::get_nhs_colours(), 
+    "White" = "#FFFFFF", 
+    "LightGrey" = "#DDE1E4"
+  )[names]
 
   # Return the unnamed colours
   unname(colours)
