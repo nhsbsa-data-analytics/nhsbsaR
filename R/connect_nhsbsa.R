@@ -6,26 +6,26 @@
 #'
 #' @param driver String, ODBC driver to connect to the DB. Default is correct
 #'   but an argument is provided in case this ever changes.
-#' @param database String, name of the DB.
+#' @param database String, name of the DB - one of c("DALP", "DWCP")).
 #' @param username String, username for DB. Default value is
-#'   `Sys.getenv("DB_USERNAME")` and we recommend setting this in an
-#'   `.Renviron` file.
+#'   `Sys.getenv(paste0("DB_", database, "_USERNAME"))` and we recommend setting
+#'   this in an `.Renviron` file.
 #' @param password String, username for DB. Default value is
-#'   `Sys.getenv("DB_PASSWORD")` and we recommend setting this in an
-#'   `.Renviron` file.
+#'   `Sys.getenv(paste0("DB_", database, "_PASSWORD"))` and we recommend setting
+#'   this in an `.Renviron` file.
 #'
 #' @return Connection to DB. Note: When finished close your connection using
 #'   `DBI::dbDisconnect()`
 #'
 #' @examples
-#' # Initialise connection assuming you have a `.Renviron` file with DB_USERNAME
-#' # and DB_PASSWORD set (recommended)
-#' con <- nhsbsR::con_nhsbsa()
-#' con <- nhsbsR::con_nhsbsa(database = "DWCP")
+#' # Initialise connection assuming you have a `.Renviron` file with
+#' DB_DALP_USERNAME and DB_DALP_PASSWORD set (recommended)
+#' con <- nhsbsR::con_nhsbsa(database = "DALP")
 #'
 #' # Initialise connection without `.Renviron` file (Note: Never store passwords
 #' # in your code)
 #' con <- nhsbsR::con_nhsbsa(
+#'   database = "DWCP",
 #'   username = rstudioapi::showPrompt(),
 #'   password = rstudioapi::askForPassword()
 #' )
@@ -43,19 +43,21 @@
 #' DBI::dbDisconnect(con)
 #'
 #' @export
-con_nhsbsa <- function(driver    = "Oracle in OraClient19Home1",
-                       database,
-                       username  = Sys.getenv("DB_USERNAME"),
-                       password  = Sys.getenv("DB_PASSWORD")) {
-  
+con_nhsbsa <- function(
+  driver    = "Oracle in OraClient19Home1",
+  database,
+  username  = Sys.getenv(paste0("DB_", database, "_USERNAME")),
+  password  = Sys.getenv(paste0("DB_", database, "_PASSWORD"))
+) {
+
   DBI::dbConnect(
     drv    = odbc::odbc(),
     Driver = driver,
-    DBQ    = Sys.getenv(paste0("CONNECTION_STRING_", database)),
+    DBQ    = Sys.getenv(paste0("DB_", database, "_CONNECTION_STRING")),
     UID    = username,
     PWD    = password
   )
-  
+
 }
 
 
@@ -68,30 +70,26 @@ con_nhsbsa <- function(driver    = "Oracle in OraClient19Home1",
 #'
 #' @param driver String, ODBC driver to connect to the DB. Default is correct
 #'   but an argument is provided in case this ever changes.
-#' @param server String, server address of the DB. Default value is correct but
-#'   an argument is provided in case this ever changes.
-#' @param port Numeric, port of the DB. Default value is correct but an argument
-#'   is provided in case this ever changes.
-#' @param database String, name of the DB. Default value is "DALP.WORLD".
+#' @param database String, name of the DB - one of c("DALP", "DWCP")).
 #' @param username String, username for DB. Default value is
-#'   `Sys.getenv("DB_USERNAME")` and we recommend setting this in an
-#'   `.Renviron` file.
+#'   `Sys.getenv(paste0("DB_", database, "_USERNAME"))` and we recommend setting
+#'   this in an `.Renviron` file.
 #' @param password String, username for DB. Default value is
-#'   `Sys.getenv("DB_PASSWORD")` and we recommend setting this in an
-#'   `.Renviron` file.
+#'   `Sys.getenv(paste0("DB_", database, "_PASSWORD"))` and we recommend setting
+#'   this in an `.Renviron` file.
 #'
 #' @return Pool to DB. Note: When finished close your connection using
 #'   `pool::poolClose()`
 #'
 #' @examples
-#' # Initialise pool assuming you have a `.Renviron` file with DB_USERNAME
-#' # and DB_PASSWORD set (recommended)
-#' pool <- nhsbsR::pool_nhsbsa()
-#' pool <- nhsbsR::pool_nhsbsa(database = "DWCP")
+#' # Initialise pool assuming you have a `.Renviron` file with DB_DALP_USERNAME
+#' and DB_DALP_PASSWORD set (recommended)
+#' pool <- nhsbsR::pool_nhsbsa(database = "DALP")
 #'
 #' # Initialise pool without `.Renviron` file (Note: Never store passwords in
 #' # your code)
 #' pool <- nhsbsR::pool_nhsbsa(
+#'   database = "DWCP"
 #'   username = rstudioapi::showPrompt(),
 #'   password = rstudioapi::askForPassword()
 #' )
@@ -109,17 +107,19 @@ con_nhsbsa <- function(driver    = "Oracle in OraClient19Home1",
 #' pool::poolClose(pool)
 #'
 #' @export
-pool_nhsbsa <- function(driver    = "Oracle in OraClient19Home1",
-                        database,
-                        username  = Sys.getenv("DB_USERNAME"),
-                        password  = Sys.getenv("DB_PASSWORD")) {
-  
+pool_nhsbsa <- function(
+  driver    = "Oracle in OraClient19Home1",
+  database,
+  username  = Sys.getenv(paste0("DB_", database, "_USERNAME")),
+  password  = Sys.getenv(paste0("DB_", database, "_PASSWORD"))
+) {
+
   pool::dbPool(
     drv    = odbc::odbc(),
     Driver = driver,
-    DBQ    = Sys.getenv(paste0("CONNECTION_STRING_", database)),
+    DBQ    = Sys.getenv(paste0("DB_", database, "_CONNECTION_STRING")),
     UID    = username,
     PWD    = password
   )
-  
+
 }
