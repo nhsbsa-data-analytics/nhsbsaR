@@ -7,29 +7,23 @@
 pool_nhsbsa(
   driver = "Oracle in OraClient19Home1",
   database,
-  username = Sys.getenv("DB_USERNAME"),
-  password = Sys.getenv("DB_PASSWORD")
+  username = Sys.getenv(paste0("DB_", database, "_USERNAME")),
+  password = Sys.getenv(paste0("DB_", database, "_PASSWORD"))
 )
 }
 \arguments{
 \item{driver}{String, ODBC driver to connect to the DB. Default is correct
 but an argument is provided in case this ever changes.}
 
-\item{database}{String, name of the DB. Default value is "DALP.WORLD".}
+\item{database}{String, name of the DB - one of c("DALP", "DWCP")).}
 
 \item{username}{String, username for DB. Default value is
-\code{Sys.getenv("DB_USERNAME")} and we recommend setting this in an
-\code{.Renviron} file.}
+\code{Sys.getenv(paste0("DB_", database, "_USERNAME"))} and we recommend setting
+this in an \code{.Renviron} file.}
 
 \item{password}{String, username for DB. Default value is
-\code{Sys.getenv("DB_PASSWORD")} and we recommend setting this in an
-\code{.Renviron} file.}
-
-\item{server}{String, server address of the DB. Default value is correct but
-an argument is provided in case this ever changes.}
-
-\item{port}{Numeric, port of the DB. Default value is correct but an argument
-is provided in case this ever changes.}
+\code{Sys.getenv(paste0("DB_", database, "_PASSWORD"))} and we recommend setting
+this in an \code{.Renviron} file.}
 }
 \value{
 Pool to DB. Note: When finished close your connection using
@@ -42,14 +36,14 @@ Hopefully you will already have the ODBC driver installed, but if not you may
 have to raise a service request with IT.
 }
 \examples{
-# Initialise pool assuming you have a `.Renviron` file with DB_USERNAME
-# and DB_PASSWORD set (recommended)
-pool <- nhsbsR::pool_nhsbsa()
-pool <- nhsbsR::pool_nhsbsa(database = "DWCP")
+# Initialise pool assuming you have a `.Renviron` file with DB_DALP_USERNAME
+and DB_DALP_PASSWORD set (recommended)
+pool <- nhsbsR::pool_nhsbsa(database = "DALP")
 
 # Initialise pool without `.Renviron` file (Note: Never store passwords in
 # your code)
 pool <- nhsbsR::pool_nhsbsa(
+  database = "DWCP"
   username = rstudioapi::showPrompt(),
   password = rstudioapi::askForPassword()
 )
