@@ -7,23 +7,23 @@
 con_nhsbsa(
   driver = "Oracle in OraClient19Home1",
   database,
-  username = Sys.getenv("DB_USERNAME"),
-  password = Sys.getenv("DB_PASSWORD")
+  username = Sys.getenv(paste0("DB_", database, "_USERNAME")),
+  password = Sys.getenv(paste0("DB_", database, "_PASSWORD"))
 )
 }
 \arguments{
 \item{driver}{String, ODBC driver to connect to the DB. Default is correct
 but an argument is provided in case this ever changes.}
 
-\item{database}{String, name of the DB.}
+\item{database}{String, name of the DB - one of c("DALP", "DWCP")).}
 
 \item{username}{String, username for DB. Default value is
-\code{Sys.getenv("DB_USERNAME")} and we recommend setting this in an
-\code{.Renviron} file.}
+\code{Sys.getenv(paste0("DB_", database, "_USERNAME"))} and we recommend setting
+this in an \code{.Renviron} file.}
 
 \item{password}{String, username for DB. Default value is
-\code{Sys.getenv("DB_PASSWORD")} and we recommend setting this in an
-\code{.Renviron} file.}
+\code{Sys.getenv(paste0("DB_", database, "_PASSWORD"))} and we recommend setting
+this in an \code{.Renviron} file.}
 }
 \value{
 Connection to DB. Note: When finished close your connection using
@@ -35,14 +35,14 @@ the ODBC driver installed, but if not you may have to raise a service
 request with IT.
 }
 \examples{
-# Initialise connection assuming you have a `.Renviron` file with DB_USERNAME
-# and DB_PASSWORD set (recommended)
-con <- nhsbsR::con_nhsbsa()
-con <- nhsbsR::con_nhsbsa(database = "DWCP")
+# Initialise connection assuming you have a `.Renviron` file with
+DB_DALP_USERNAME and DB_DALP_PASSWORD set (recommended)
+con <- nhsbsR::con_nhsbsa(database = "DALP")
 
 # Initialise connection without `.Renviron` file (Note: Never store passwords
 # in your code)
 con <- nhsbsR::con_nhsbsa(
+  database = "DWCP",
   username = rstudioapi::showPrompt(),
   password = rstudioapi::askForPassword()
 )
