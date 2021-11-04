@@ -16,11 +16,12 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
 Depends: 
     R (>= 3.2.0)
+Additional_repositories:
+    https://MarkMc1089.github.io/drat
 Imports: 
     DBI,
     odbc,
     dbplyr,
     ggplot2,
-    highcharter
-Remotes: 
-    nhs-r-community/nhsrtheme
+    highcharter,
+    nhsrtheme

@@ -19,28 +19,42 @@
 #'
 #' @examples
 #' # Initialise connection assuming you have a `.Renviron` file with
-#' DB_DALP_USERNAME and DB_DALP_PASSWORD set (recommended)
-#' con <- nhsbsR::con_nhsbsa(database = "DALP")
+#' # DB_DALP_USERNAME and DB_DALP_PASSWORD set (recommended)
+#' \dontrun{
+#'   con <- nhsbsaR::con_nhsbsa(database = "DALP")
+#' }
 #'
 #' # Initialise connection without `.Renviron` file (Note: Never store passwords
 #' # in your code)
-#' con <- nhsbsR::con_nhsbsa(
-#'   database = "DWCP",
-#'   username = rstudioapi::showPrompt(),
-#'   password = rstudioapi::askForPassword()
-#' )
+#' \dontrun{
+#'   con <- nhsbsaR::con_nhsbsa(
+#'     database = "DWCP",
+#'     username = rstudioapi::showPrompt(),
+#'     password = rstudioapi::askForPassword()
+#'   )
+#' }
+#'
 #'
 #' # Boring DBI methods...
-#' DBI::dbGetQuery(conn = con, statement = "SELECT * FROM dual")
-#' DBI::dbReadTable(conn = con, name = "DUAL") # Case sensitive in ODBC
+#' \dontrun{
+#'   DBI::dbGetQuery(conn = con, statement = "SELECT * FROM dual")
+#'   DBI::dbReadTable(conn = con, name = "DUAL") # Case sensitive in ODBC
+#' }
+#'
 #'
 #' # Cool dbplyr methods... (see https://dbplyr.tidyverse.org)
-#' dplyr::tbl(src = con, from = "DUAL") # Case sensitive in ODBC
-#' dplyr::tbl(src = con, from = dbplyr::in_schema(schema = "SYS", table = "DUAL") # Case sensitive in ODBC
-#' dplyr::tbl(src = con, from = dbplyr::sql("SELECT * FROM dual"))
+#' \dontrun{
+#'   dplyr::tbl(src = con, from = "DUAL") # Case sensitive in ODBC
+#'   dplyr::tbl(src = con, from = dbplyr::in_schema(schema = "SYS", table = "DUAL") # Case sensitive in ODBC
+#'   dplyr::tbl(src = con, from = dbplyr::sql("SELECT * FROM dual"))
+#' }
+#'
 #'
 #' # Remember to disconnect your session
-#' DBI::dbDisconnect(con)
+#' \dontrun{
+#'   DBI::dbDisconnect(con)
+#' }
+#'
 #'
 #' @export
 con_nhsbsa <- function(
@@ -82,29 +96,43 @@ con_nhsbsa <- function(
 #'   `pool::poolClose()`
 #'
 #' @examples
-#' # Initialise pool assuming you have a `.Renviron` file with DB_DALP_USERNAME
-#' and DB_DALP_PASSWORD set (recommended)
-#' pool <- nhsbsR::pool_nhsbsa(database = "DALP")
+#' #Initialise pool assuming you have a `.Renviron` file with DB_DALP_USERNAME
+#' #and DB_DALP_PASSWORD set (recommended)
+#'
+#' \dontrun{
+#'   pool <- nhsbsaR::pool_nhsbsa(database = "DALP")
+#' }
+#'
 #'
 #' # Initialise pool without `.Renviron` file (Note: Never store passwords in
 #' # your code)
-#' pool <- nhsbsR::pool_nhsbsa(
-#'   database = "DWCP"
-#'   username = rstudioapi::showPrompt(),
-#'   password = rstudioapi::askForPassword()
-#' )
+#' \dontrun{
+#'   pool <- nhsbsaR::pool_nhsbsa(
+#'     database = "DWCP"
+#'     username = rstudioapi::showPrompt(),
+#'     password = rstudioapi::askForPassword()
+#'   )
+#' }
+#'
 #'
 #' # Boring DBI methods...
-#' DBI::dbGetQuery(conn = pool, statement = "SELECT * FROM dual")
-#' DBI::dbReadTable(conn = pool, name = "DUAL") # Case sensitive in ODBC
+#' \dontrun{
+#'   DBI::dbGetQuery(conn = pool, statement = "SELECT * FROM dual")
+#'   DBI::dbReadTable(conn = pool, name = "DUAL") # Case sensitive in ODBC
+#' }
 #'
 #' # Cool dbplyr methods... (see https://dbplyr.tidyverse.org)
-#' dplyr::tbl(src = pool, from = "DUAL") # Case sensitive in ODBC
-#' dplyr::tbl(src = pool, from = dbplyr::in_schema(schema = "SYS", table = "DUAL") # Case sensitive in ODBC
-#' dplyr::tbl(src = pool, from = dbplyr::sql("SELECT * FROM dual"))
+#' \dontrun{
+#'   dplyr::tbl(src = pool, from = "DUAL") # Case sensitive in ODBC
+#'   dplyr::tbl(src = pool, from = dbplyr::in_schema(schema = "SYS", table = "DUAL") # Case sensitive in ODBC
+#'   dplyr::tbl(src = pool, from = dbplyr::sql("SELECT * FROM dual"))
+#' }
+#'
 #'
 #' # Remember to disconnect your session
-#' pool::poolClose(pool)
+#' \dontrun{
+#'   pool::poolClose(pool)
+#' }
 #'
 #' @export
 pool_nhsbsa <- function(

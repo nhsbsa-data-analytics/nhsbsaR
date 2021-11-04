@@ -20,9 +20,9 @@ Generate an accessible and appropriate colour palette for NHSBSA charts that
 is inline with the NHS identity. Currently supports up to 8 colours.
 }
 \examples{
-nhsbsR::palette_nhsbsa()
-nhsbsR::palette_nhsbsa(palette = "gender")
-nhsbsR::palette_nhsbsa(palette = "gradient")
-nhsbsR::palette_nhsbsa(palette = "highlight")
+nhsbsaR::palette_nhsbsa()
+nhsbsaR::palette_nhsbsa(palette = "gender")
+nhsbsaR::palette_nhsbsa(palette = "gradient")
+nhsbsaR::palette_nhsbsa(palette = "highlight")
 
 }
