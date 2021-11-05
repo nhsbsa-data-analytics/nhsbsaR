@@ -21,7 +21,7 @@ Imports:
     dbplyr,
     ggplot2,
     highcharter,
-    nhsrtheme,
+    NHSRtheme,
     odbc
 Remotes: 
-    nhs-r-community/nhsrtheme
+    nhs-r-community/NHSRtheme
