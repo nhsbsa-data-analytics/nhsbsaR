@@ -26,4 +26,4 @@ Imports:
     highcharter,
     nhsrtheme
 Remotes:
-    https://github.com/MarkMc1089/nhsbsaR
+    MarkMc1089/nhsrtheme
