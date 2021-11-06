@@ -25,3 +25,5 @@ Imports:
     ggplot2,
     highcharter,
     nhsrtheme
+Remotes:
+    https://MarkMc1089/nhsrtheme
