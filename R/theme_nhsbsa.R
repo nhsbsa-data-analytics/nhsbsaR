@@ -30,12 +30,12 @@
 #' # Standard usage
 #' ggplot2::ggplot(data = ggplot2::diamonds) +
 #'   ggplot2::geom_bar(mapping = ggplot2::aes(x = cut)) +
-#'   nhsbsR::theme_nhsbsa_gg()
+#'   nhsbsaR::theme_nhsbsa_gg()
 #'
 #' # Add an axis label
 #' ggplot2::ggplot(data = ggplot2::diamonds) +
 #'   ggplot2::geom_bar(mapping = ggplot2::aes(x = cut)) +
-#'   nhsbsR::theme_nhsbsa_gg() +
+#'   nhsbsaR::theme_nhsbsa_gg() +
 #'   ggplot2::theme(axis.title.x = ggplot2::element_text()) +
 #'   ggplot2::xlab("Cut")
 #'
@@ -43,47 +43,47 @@
 theme_nhsbsa_gg <- function(plot, family = "sans") {
 
   ggplot2::theme(
-    
+
     # Make the font of any text "sans" or another `family` parameter and
     # colour any text NHS Black and size 10
     text = ggplot2::element_text(family = family, color = "#231f20", size = 10),
-    
+
     # Colour background NHS White
     panel.background = ggplot2::element_rect(fill = "#FFFFFF"),
-    
+
     # Make all titles bold (hack to make axis and legend titles bold if they
     # are added later) and size 12
     title = ggplot2::element_text(face = "bold", size = 12),
-    
+
     # Make the title centered
     plot.title = ggplot2::element_text(hjust = 0.5),
-    
+
     # Un-bold and left align the subtitle
     plot.subtitle = ggplot2::element_text(face = "plain", hjust = 0),
-    
+
     # Un-bold the caption
     plot.caption = ggplot2::element_text(face = "plain"),
-    
+
     # Move the legend to the top with no background or key background
     # Note: the legend may need manual tweaking based on plot coordinates
     legend.position = "top",
     legend.title = ggplot2::element_blank(),
     legend.background = ggplot2::element_blank(),
     legend.key = ggplot2::element_blank(),
-    
+
     # Remove axis ticks and colour axis lines NHS Mid Grey
     axis.text.x = ggplot2::element_text(margin = ggplot2::margin(t = 0)),
     axis.ticks = ggplot2::element_blank(),
     axis.line = ggplot2::element_line(color = "#768692"),
-    
+
     # Remove all gridlines
     panel.grid = ggplot2::element_blank(),
-    
+
     # For facets, bold and left align the titles and colour the panel background
     # white
     strip.text = ggplot2::element_text(face = "bold", hjust = 0),
     strip.background = ggplot2::element_rect(fill = "#FFFFFF")
-    
+
   )
 
 }
@@ -151,10 +151,10 @@ theme_nhsbsa_hc <- function(family = "TT Arial") {
 
       # Bold yaxis title
       title = list(style = list(fontWeight = "bold")),
-      
+
       # Add yaxis line
       lineWidth = 1,
-      
+
       # Colour yaxis ticks and lines NHS Mid Grey
       lineColor = "#768692",
       tickColor = "#768692",

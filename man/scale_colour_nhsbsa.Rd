@@ -28,6 +28,6 @@ ggplot2::ggplot(data = ggplot2::diamonds) +
   ggplot2::geom_point(
     mapping = ggplot2::aes(x = carat, y = price, col = carat)
   ) +
-  nhsbsR::scale_colour_nhsbsa(palette = "gradient")
+  nhsbsaR::scale_colour_nhsbsa(palette = "gradient")
 
 }

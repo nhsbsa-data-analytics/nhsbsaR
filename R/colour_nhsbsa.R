@@ -10,10 +10,10 @@
 #' @return Colour palette
 #'
 #' @examples
-#' nhsbsR::palette_nhsbsa()
-#' nhsbsR::palette_nhsbsa(palette = "gender")
-#' nhsbsR::palette_nhsbsa(palette = "gradient")
-#' nhsbsR::palette_nhsbsa(palette = "highlight")
+#' nhsbsaR::palette_nhsbsa()
+#' nhsbsaR::palette_nhsbsa(palette = "gender")
+#' nhsbsaR::palette_nhsbsa(palette = "gradient")
+#' nhsbsaR::palette_nhsbsa(palette = "highlight")
 #'
 #' @export
 palette_nhsbsa <- function(palette = NA, reverse = FALSE) {
@@ -54,11 +54,11 @@ palette_nhsbsa <- function(palette = NA, reverse = FALSE) {
     names <- rev(names)
   }
 
-  # Get the NHS identity hex colour for each name (with a couple of custom 
+  # Get the NHS identity hex colour for each name (with a couple of custom
   # colours added)
   colours <- c(
-    NHSRtheme::get_nhs_colours(), 
-    "White" = "#FFFFFF", 
+    NHSRtheme::get_nhs_colours(),
+    "White" = "#FFFFFF",
     "LightGrey" = "#DDE1E4"
   )[names]
 
@@ -86,7 +86,7 @@ palette_nhsbsa <- function(palette = NA, reverse = FALSE) {
 #'   ggplot2::geom_point(
 #'     mapping = ggplot2::aes(x = carat, y = price, col = carat)
 #'   ) +
-#'   nhsbsR::scale_colour_nhsbsa(palette = "gradient")
+#'   nhsbsaR::scale_colour_nhsbsa(palette = "gradient")
 #'
 #' @export
 scale_colour_nhsbsa <- function(palette = NA,
@@ -143,10 +143,10 @@ scale_colour_nhsbsa <- function(palette = NA,
 #' @examples
 #' ggplot2::ggplot(data = ggplot2::diamonds) +
 #'   ggplot2::geom_bar(mapping = ggplot2::aes(x = cut, fill = cut)) +
-#'   nhsbsR::scale_fill_nhsbsa()
+#'   nhsbsaR::scale_fill_nhsbsa()
 #' ggplot2::ggplot(data = ggplot2::diamonds) +
 #'   ggplot2::geom_bar(mapping = ggplot2::aes(x = cut, fill = cut)) +
-#'   nhsbsR::scale_fill_nhsbsa(palette = "gradient", n_discrete = 5)
+#'   nhsbsaR::scale_fill_nhsbsa(palette = "gradient", n_discrete = 5)
 #' @export
 scale_fill_nhsbsa <- function(palette = NA,
                               n_discrete = 0,

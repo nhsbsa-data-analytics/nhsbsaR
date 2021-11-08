@@ -38,12 +38,12 @@ that to add axis titles you must first add the element back in like this:
 # Standard usage
 ggplot2::ggplot(data = ggplot2::diamonds) +
   ggplot2::geom_bar(mapping = ggplot2::aes(x = cut)) +
-  nhsbsR::theme_nhsbsa_gg()
+  nhsbsaR::theme_nhsbsa_gg()
 
 # Add an axis label
 ggplot2::ggplot(data = ggplot2::diamonds) +
   ggplot2::geom_bar(mapping = ggplot2::aes(x = cut)) +
-  nhsbsR::theme_nhsbsa_gg() +
+  nhsbsaR::theme_nhsbsa_gg() +
   ggplot2::theme(axis.title.x = ggplot2::element_text()) +
   ggplot2::xlab("Cut")
 

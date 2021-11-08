@@ -26,8 +26,8 @@ Scale fill an NHSBSA ggplot using the NHSBSA colour palette.
 \examples{
 ggplot2::ggplot(data = ggplot2::diamonds) +
   ggplot2::geom_bar(mapping = ggplot2::aes(x = cut, fill = cut)) +
-  nhsbsR::scale_fill_nhsbsa()
+  nhsbsaR::scale_fill_nhsbsa()
 ggplot2::ggplot(data = ggplot2::diamonds) +
   ggplot2::geom_bar(mapping = ggplot2::aes(x = cut, fill = cut)) +
-  nhsbsR::scale_fill_nhsbsa(palette = "gradient", n_discrete = 5)
+  nhsbsaR::scale_fill_nhsbsa(palette = "gradient", n_discrete = 5)
 }
