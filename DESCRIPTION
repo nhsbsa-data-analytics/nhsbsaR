@@ -16,8 +16,6 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
 Depends: 
     R (>= 3.2.0)
-Additional_repositories:
-    https://MarkMc1089.github.io/drat
 Imports: 
     DBI,
     odbc,
@@ -26,4 +24,4 @@ Imports:
     highcharter,
     nhsrtheme
 Remotes:
-    MarkMc1089/nhsrtheme
+    nhs-r-community/nhsrtheme
