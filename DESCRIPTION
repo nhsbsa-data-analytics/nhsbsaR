@@ -24,4 +24,4 @@ Imports:
     highcharter,
     nhsrtheme
 Remotes:
-    nhs-r-community/nhsrtheme
+    nhs-r-community/NHSRtheme

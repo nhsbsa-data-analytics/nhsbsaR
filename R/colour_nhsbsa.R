@@ -57,7 +57,7 @@ palette_nhsbsa <- function(palette = NA, reverse = FALSE) {
   # Get the NHS identity hex colour for each name (with a couple of custom
   # colours added)
   colours <- c(
-    nhsrtheme::get_nhs_colours(),
+    NHSRtheme::get_nhs_colours(),
     "White" = "#FFFFFF",
     "LightGrey" = "#DDE1E4"
   )[names]
