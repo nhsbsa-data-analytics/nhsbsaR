@@ -3,7 +3,7 @@
 #' Pipe into the end of a `{dbplyr}` to create a table in your database schema.
 #'
 #' @param df Lazy Oracle table
-#' @param schema_name Name of the schema
+#' @param schema_name Name of the schema. Default is NULL (your own).
 #' @param table_name Name of the table
 #' @param overwrite Whether to overwrite an existing table
 #'
@@ -11,13 +11,16 @@
 #' dplyr::tbl(src = con, from = "DUAL") %>%
 #'   oracle_create_table("<schema_name>", "<table_name>")
 #' @export
-oracle_create_table <- function(df, schema_name, table_name, overwrite = TRUE) {
+oracle_create_table <- function(df, schema_name = NULL, table_name, overwrite = TRUE) {
 
   # Pull the connection
   db_connection <- df$src$con
 
   # Define the full table name
-  full_table_name <- paste0(schema_name, ".", table_name)
+  full_table_name <- table_name
+  if (!is.null(schema_name)) {
+      full_table_name <- paste0(schema_name, ".", full_table_name)
+  }
 
   # Create table statement
   sql_statement <- paste0(
