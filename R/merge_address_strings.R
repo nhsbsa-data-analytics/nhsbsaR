@@ -23,7 +23,7 @@
 merge_address_strings = function(df, id_col, col_one, col_two){
 
   df_edit = df %>%
-    select({{ id_col }}, {{ col_one }}, {{ col_two }})
+    dplyr::select({{ id_col }}, {{ col_one }}, {{ col_two }})
 
   S1 = colnames(df_edit)[1]
 
@@ -74,7 +74,7 @@ merge_address_strings = function(df, id_col, col_one, col_two){
   )
 
   output = tbl(db_connection, sql(sql_query)) %>%
-    rename_at("ID", ~S1)
+    dplyr::rename_at("ID", ~S1)
 
   df = df %>%
     dplyr::inner_join(y = output)
