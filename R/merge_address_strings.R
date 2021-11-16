@@ -20,13 +20,14 @@
 #'
 #' @export
 
-merge_address_strings = function(df){
+merge_address_strings = function(df, id_col, col_one, col_two){
 
-  S1 = colnames(df)[1]
-  S2 = colnames(df)[2]
-  S3 = colnames(df)[3]
+  df_edit = df %>%
+    select({{ id_col }}, {{ col_one }}, {{ col_two }})
 
-  df = df %>%
+  S1 = colnames(df_edit)[1]
+
+  df_edit = df_edit %>%
     dplyr::rename_at(c(1:3), ~c("ID", "STRING_ONE", "STRING_TWO"))
 
   string_edit = function(df, STRING_NAME){
@@ -47,8 +48,8 @@ merge_address_strings = function(df){
     return(df)
   }
 
-  one = string_edit(df, "STRING_ONE")
-  two = string_edit(df, "STRING_TWO")
+  one = string_edit(df_edit, "STRING_ONE")
+  two = string_edit(df_edit, "STRING_TWO")
 
   one_two = one %>%
     dplyr::full_join(two, by = 'TOKEN_JOIN') %>%
@@ -72,11 +73,11 @@ merge_address_strings = function(df){
     GROUP BY ID"
   )
 
-  output = tbl(db_connection, sql(sql_query))
+  output = tbl(db_connection, sql(sql_query)) %>%
+    rename_at("ID", ~S1)
 
   df = df %>%
-    dplyr::inner_join(y = output, by = "ID") %>%
-    dplyr::rename_at(c(1:3), ~c(S1, S2, S3))
+    dplyr::inner_join(y = output)
 
   return(df)
 }
