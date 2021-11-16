@@ -5,6 +5,8 @@
 #'
 #' @param df Lazy Oracle table
 #'
+#' @details requires hsbsaR::oracle_unnest_tokens() function
+#'
 #' @note df must have only 3 columns
 #' @note These must the Unique Row Identifier (ID) and then the 2 strings to be merged
 #' @note The ID column must be first of the 3 columns
@@ -13,6 +15,8 @@
 #' table_db %>%
 #' dplyr::select(ID, STRING_ONE, STRING_TWO) %>%
 #' nhsbsaR::merge_address_strings()
+#'
+#' @returns original df with additional column added
 #'
 #' @export
 
