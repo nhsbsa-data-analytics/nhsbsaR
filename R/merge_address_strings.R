@@ -4,31 +4,27 @@
 #' The result is a 'master' address string that contains all parts of each address
 #'
 #' @param df Lazy Oracle table
+#' @param col_one - first string column
+#' @param col_two - second string column
 #'
 #' @details requires hsbsaR::oracle_unnest_tokens() function
 #'
-#' @note df must have only 3 columns
-#' @note These must the Unique Row Identifier (ID) and then the 2 strings to be merged
-#' @note The ID column must be first of the 3 columns
-#'
 #' @examples
-#' table_db %>%
-#' dplyr::select(ID, STRING_ONE, STRING_TWO) %>%
-#' nhsbsaR::merge_address_strings()
+#' table_db %>% nhsbsaR::merge_address_strings(ADDRESS_ONE, ADDRESS_TWO)
 #'
-#' @returns original df with additional column added
+#' @returns original df with additional merged column added
 #'
 #' @export
 
-merge_address_strings = function(df, id_col, col_one, col_two){
+merge_address_strings = function(df, col_one, col_two){
+
+  df = df %>%
+    # Default: ties.method = "first" thus no duplicates
+    dplyr::mutate(ID = row_number({{ col_one }}))
 
   df_edit = df %>%
-    dplyr::select({{ id_col }}, {{ col_one }}, {{ col_two }})
-
-  S1 = colnames(df_edit)[1]
-
-  df_edit = df_edit %>%
-    dplyr::rename_at(c(1:3), ~c("ID", "STRING_ONE", "STRING_TWO"))
+    dplyr::select(ID, {{ col_one }}, {{ col_two }}) %>%
+    dplyr::rename_at(c(2,3), ~c("STRING_ONE", "STRING_TWO"))
 
   string_edit = function(df, STRING_NAME){
 
@@ -73,11 +69,11 @@ merge_address_strings = function(df, id_col, col_one, col_two){
     GROUP BY ID"
   )
 
-  output = tbl(db_connection, sql(sql_query)) %>%
-    dplyr::rename_at("ID", ~S1)
+  output = tbl(db_connection, sql(sql_query))
 
   df = df %>%
-    dplyr::inner_join(y = output)
+    dplyr::inner_join(y = output, by = "ID") %>%
+    dplyr::select(-ID)
 
   return(df)
 }
