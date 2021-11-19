@@ -27,15 +27,15 @@ oracle_merge_strings <- function(df, col_one, col_two){
     dplyr::select(ID, {{ col_one }}, {{ col_two }}) %>%
     dplyr::rename_at(c(2, 3), ~c("STRING_ONE", "STRING_TWO"))
 
-  string_edit <- function(df, STRING_NAME){
+  string_edit <- function(df, col){
 
     # Get 'ONE' or 'TWO' from designated string name
-    STRING_NUM = substr(STRING_NAME, 8, 11)
+    STRING_NUM = substr({{ col }}, 8, 11)
 
     df %>%
-      dplyr::select(ID, STRING_NAME) %>%
+      dplyr::select(ID, {{ col }}) %>%
       # Unnest token using nhsbsaR function
-      nhsbsaR::oracle_unnest_tokens(col = STRING_NAME, drop = TRUE) %>%
+      nhsbsaR::oracle_unnest_tokens(col = {{ col }}, drop = TRUE) %>%
       dplyr::group_by(ID, TOKEN) %>%
       # Give each token a rank, so that each occurrence of a word can be numbered
       # E.g. 'CITY-1', 'CITY-2', 'CITY-3' etc
@@ -53,8 +53,10 @@ oracle_merge_strings <- function(df, col_one, col_two){
   }
 
   # Col_one and col_two processed
-  one <- string_edit(df_edit, "STRING_ONE")
-  two <- string_edit(df_edit, "STRING_TWO")
+  one <- df_edit %>%
+    string_edit(col = STRING_ONE)
+  two <- df_edit %>%
+    string_edit(col = STRING_TWO)
 
   # Join 2 outputs on bespoke generated joining term and remove unneeded vars
   one_two <- one %>%
