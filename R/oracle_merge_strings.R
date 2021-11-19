@@ -7,7 +7,7 @@
 #' @param col_one - first string column
 #' @param col_two - second string column
 #'
-#' @details requires hsbsaR::oracle_unnest_tokens() function
+#' @details requires nhsbsaR::oracle_unnest_tokens() function
 #'
 #' @examples
 #' table_db %>% nhsbsaR::oracle_merge_strings(ADDRESS_ONE, ADDRESS_TWO)
