@@ -25,7 +25,7 @@ oracle_merge_strings <- function(df, col_one, col_two){
   # Rename selected columns, for ease of use during code
   df_edit <- df %>%
     dplyr::select(ID, {{ col_one }}, {{ col_two }}) %>%
-    dplyr::rename_at(c(2,3), ~c("STRING_ONE", "STRING_TWO"))
+    dplyr::rename_at(c(2, 3), ~c("STRING_ONE", "STRING_TWO"))
 
   string_edit <- function(df, STRING_NAME){
 
