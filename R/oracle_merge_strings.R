@@ -15,8 +15,7 @@
 #' @returns original df with additional merged column added
 #'
 #' @export
-
-oracle_merge_strings = function(df, col_one, col_two){
+oracle_merge_strings <- function(df, col_one, col_two){
 
   # Default: ties.method = "first" thus no duplicates
   df <- df %>%
