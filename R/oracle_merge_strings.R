@@ -10,57 +10,57 @@
 #' @details requires hsbsaR::oracle_unnest_tokens() function
 #'
 #' @examples
-#' table_db %>% nhsbsaR::merge_address_strings(ADDRESS_ONE, ADDRESS_TWO)
+#' table_db %>% nhsbsaR::oracle_merge_strings(ADDRESS_ONE, ADDRESS_TWO)
 #'
 #' @returns original df with additional merged column added
 #'
 #' @export
 
-merge_address_strings = function(df, col_one, col_two){
+oracle_merge_strings = function(df, col_one, col_two){
 
   # Default: ties.method = "first" thus no duplicates
-  df = df %>%
-    dplyr::mutate(ID = row_number({{ col_one }}))
+  df <- df %>%
+    dplyr::mutate(ID = dplyr::row_number({{ col_one }}))
 
 
   # Rename selected columns, for ease of use during code
-  df_edit = df %>%
+  df_edit <- df %>%
     dplyr::select(ID, {{ col_one }}, {{ col_two }}) %>%
     dplyr::rename_at(c(2,3), ~c("STRING_ONE", "STRING_TWO"))
 
-  string_edit = function(df, STRING_NAME){
+  string_edit <- function(df, STRING_NAME){
 
     # Get 'ONE' or 'TWO' from designated string name
     STRING_NUM = substr(STRING_NAME, 8, 11)
 
-    df = df %>%
-      dplyr::select("ID", STRING_NAME) %>%
+    df %>%
+      dplyr::select(ID, STRING_NAME) %>%
       # Unnest token using nhsbsaR function
-      nhsbsaR::oracle_unnest_tokens(df = ., col = STRING_NAME, drop = T) %>%
+      nhsbsaR::oracle_unnest_tokens(col = STRING_NAME, drop = TRUE) %>%
       dplyr::group_by(ID, TOKEN) %>%
       # Give each token a rank, so that each occurrence of a word can be numbered
       # E.g. 'CITY-1', 'CITY-2', 'CITY-3' etc
-      dplyr::mutate(TOKEN_COUNT = rank(TOKEN_NUMBER)) %>%
+      dplyr::mutate(TOKEN_COUNT = RANK(TOKEN_NUMBER)) %>%
       dplyr::ungroup() %>%
       # Create bespoke joining term, which is ID, which token and the token occurence number
       # This controls and manages a later outer_join
-      dplyr::mutate(TOKEN_JOIN = paste(TOKEN,TOKEN_COUNT,ID, sep = "*")) %>%
+      dplyr::mutate(TOKEN_JOIN = paste(TOKEN, TOKEN_COUNT, ID, sep = "*")) %>%
       dplyr::select(ID, TOKEN, TOKEN_JOIN, TOKEN_NUMBER) %>%
       # As function output is used twice, label vars depending on whether col_one or col_two is being processed
       dplyr::rename_at("ID", ~paste0(STRING_NUM, "_ID")) %>%
       dplyr::rename_at("TOKEN", ~paste0(STRING_NUM, "_TOKEN")) %>%
       dplyr::rename_at("TOKEN_NUMBER", ~paste0(STRING_NUM, "_ROW"))
-    return(df)
+    
   }
 
   # Col_one and col_two processed
-  one = string_edit(df_edit, "STRING_ONE")
-  two = string_edit(df_edit, "STRING_TWO")
+  one <- string_edit(df_edit, "STRING_ONE")
+  two <- string_edit(df_edit, "STRING_TWO")
 
   # Join 2 outputs on bespoke generated joining term and remove unneeded vars
-  one_two = one %>%
-    dplyr::full_join(two, by = 'TOKEN_JOIN') %>%
-    dplyr::mutate(ID = coalesce(ONE_ID, TWO_ID)) %>%
+  one_two <- one %>%
+    dplyr::full_join(y = two, by = "TOKEN_JOIN") %>%
+    dplyr::mutate(ID = COALESCE(ONE_ID, TWO_ID)) %>%
     dplyr::select(-c(ONE_ID, TWO_ID, TOKEN_JOIN))
 
   # Generate connection for generated joined output
@@ -88,12 +88,8 @@ merge_address_strings = function(df, col_one, col_two){
   output = tbl(db_connection, sql(sql_query))
 
   # Rejoin back to original data, and remove now unnneeded ID term
-  df = df %>%
+  df %>%
     dplyr::inner_join(y = output, by = "ID") %>%
     dplyr::select(-ID)
 
-  # Return original df with newly generated column added
-  return(df)
 }
-
-#-------------------------------------------------------------------------------
