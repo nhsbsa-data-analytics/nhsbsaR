@@ -17,55 +17,41 @@
 #' @export
 oracle_merge_strings <- function(df, first_col, second_col, merge_col) {
 
-  # Process first column
-  first_col_df <- df %>%
-    # Get the unique values
-    dplyr::distinct(!!sym(first_col)) %>%
-    # Tokenise
-    nhsbsaR::oracle_unnest_tokens(
-      col = first_col,
-      drop = FALSE
-    ) %>%
-    # Give each token a rank within the string (e.g. 'CITY-1', 'CITY-2', etc)
-    dplyr::rename(
-      TOKEN = TOKEN,
-      FIRST_COL_TOKEN_NUMBER = TOKEN_NUMBER
-    ) %>%
-    dplyr::group_by(!!sym(first_col), TOKEN) %>%
-    dplyr::mutate(
-      TOKEN_RANK = dplyr::row_number(FIRST_COL_TOKEN_NUMBER)
-    ) %>%
-    dplyr::ungroup()
-
-  # Process second column
-  second_col_df <- df %>%
-    # Get the unique values
-    dplyr::distinct(!!sym(second_col)) %>%
-    # Tokenise
-    nhsbsaR::oracle_unnest_tokens(
-      col = second_col,
-      drop = FALSE
-    ) %>%
-    # Give each token a rank within the string (e.g. 'CITY-1', 'CITY-2', etc)
-    dplyr::rename(
-      TOKEN = TOKEN,
-      SECOND_COL_TOKEN_NUMBER = TOKEN_NUMBER
-    ) %>%
-    dplyr::group_by(!!sym(second_col), TOKEN) %>%
-    dplyr::mutate(
-      TOKEN_RANK = dplyr::row_number(SECOND_COL_TOKEN_NUMBER)
-    ) %>%
-    dplyr::ungroup()
-
-  # Get the unique combinations we want to merge (incase there are duplicates)
+  # Get the unique combinations we want to merge (in case there are duplicates)
   distinct_df <- df %>%
     dplyr::distinct(!!sym(first_col), !!sym(second_col))
+
+  # Process columns (loop over each one as we repeat the processing)
+  col_dfs <- list()
+  for (col in c(first_col, second_col)) {
+
+    col_dfs[[col]] <- distinct_df %>%
+      # Get the unique values
+      dplyr::distinct(!!sym(col)) %>%
+      # Tokenise
+      nhsbsaR::oracle_unnest_tokens(
+        col = col,
+        drop = FALSE
+      ) %>%
+      # Give each token a rank within the string (e.g. 'CITY-1', 'CITY-2', etc)
+      dplyr::group_by(!!sym(col), TOKEN) %>%
+      dplyr::mutate(TOKEN_RANK = dplyr::row_number(TOKEN_NUMBER)) %>%
+      dplyr::ungroup() %>%
+      # Rename the token number column
+      dplyr::rename_with(.fn = ~paste0(col, "_", .x), .cols = TOKEN_NUMBER) %>%
+      # Join back to the unique combinations (handy for full_join later)
+      dplyr::inner_join(
+        y = distinct_df,
+        copy = TRUE
+      )
+
+  }
 
   # Join the tokenised data together (attempt to join by TOKEN and TOKEN_RANK)
   distinct_df <-
     dplyr::full_join(
-      x = first_col_df %>% dplyr::inner_join(y = distinct_df, copy = TRUE),
-      y = second_col_df %>% dplyr::inner_join(y = distinct_df, copy = TRUE),
+      x = col_dfs[[first_col]],
+      y = col_dfs[[second_col]],
       copy = TRUE
     )
 
@@ -79,11 +65,11 @@ oracle_merge_strings <- function(df, first_col, second_col, merge_col) {
     (
       SELECT ",
         dplyr::sql(first_col), ", ",
-        dplyr::sql(second_col), ",
-        FIRST_COL_TOKEN_NUMBER,
-        SECOND_COL_TOKEN_NUMBER,
+        dplyr::sql(second_col), ", ",
+        dplyr::sql(first_col), "_TOKEN_NUMBER, ",
+        dplyr::sql(second_col), "_TOKEN_NUMBER, ", "
         TOKEN,
-        COALESCE(FIRST_COL_TOKEN_NUMBER, LEAD(FIRST_COL_TOKEN_NUMBER IGNORE NULLS) OVER (PARTITION BY ", dplyr::sql(first_col), ", ", dplyr::sql(second_col), " ORDER BY SECOND_COL_TOKEN_NUMBER)) AS LEAD_TOKEN_NUMBER
+        COALESCE(", dplyr::sql(first_col), "_TOKEN_NUMBER, ", "LEAD(", dplyr::sql(first_col), "_TOKEN_NUMBER IGNORE NULLS) OVER (PARTITION BY ", dplyr::sql(first_col), ", ", dplyr::sql(second_col), " ORDER BY ", dplyr::sql(second_col), "_TOKEN_NUMBER)) AS LEAD_TOKEN_NUMBER
 
       FROM
         (", dbplyr::sql_render(distinct_df), ")
@@ -92,7 +78,7 @@ oracle_merge_strings <- function(df, first_col, second_col, merge_col) {
     SELECT ",
       dplyr::sql(first_col), ", ",
       dplyr::sql(second_col), ",
-      LISTAGG(TOKEN, ' ') within group (order by LEAD_TOKEN_NUMBER, SECOND_COL_TOKEN_NUMBER) as ", dplyr::sql(merge_col), "
+      LISTAGG(TOKEN, ' ') within group (order by LEAD_TOKEN_NUMBER, ", dplyr::sql(second_col), "_TOKEN_NUMBER) as ", dplyr::sql(merge_col), "
 
     FROM
       LT
