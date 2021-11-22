@@ -11,11 +11,10 @@
 #'
 #' @examples
 #' table_db %>% nhsbsaR::oracle_merge_strings(ADDRESS_ONE, ADDRESS_TWO)
-#'
 #' @returns original df with additional merged column added
 #'
 #' @export
-oracle_merge_strings <- function(df, col_one, col_two){
+oracle_merge_strings <- function(df, col_one, col_two) {
 
   # Default: ties.method = "first" thus no duplicates
   df <- df %>%
@@ -25,12 +24,12 @@ oracle_merge_strings <- function(df, col_one, col_two){
   # Rename selected columns, for ease of use during code
   df_edit <- df %>%
     dplyr::select(ID, {{ col_one }}, {{ col_two }}) %>%
-    dplyr::rename_at(c(2, 3), ~c("STRING_ONE", "STRING_TWO"))
+    dplyr::rename_at(c(2, 3), ~ c("STRING_ONE", "STRING_TWO"))
 
-  string_edit <- function(df, col){
+  string_edit <- function(df, col) {
 
     # Get 'ONE' or 'TWO' from designated string name
-    STRING_NUM = substr({{ col }}, 8, 11)
+    STRING_NUM <- substr({{ col }}, 8, 11)
 
     df %>%
       dplyr::select(ID, {{ col }}) %>%
@@ -46,10 +45,9 @@ oracle_merge_strings <- function(df, col_one, col_two){
       dplyr::mutate(TOKEN_JOIN = paste(TOKEN, TOKEN_COUNT, ID, sep = "*")) %>%
       dplyr::select(ID, TOKEN, TOKEN_JOIN, TOKEN_NUMBER) %>%
       # As function output is used twice, label vars depending on whether col_one or col_two is being processed
-      dplyr::rename_at("ID", ~paste0(STRING_NUM, "_ID")) %>%
-      dplyr::rename_at("TOKEN", ~paste0(STRING_NUM, "_TOKEN")) %>%
-      dplyr::rename_at("TOKEN_NUMBER", ~paste0(STRING_NUM, "_ROW"))
-    
+      dplyr::rename_at("ID", ~ paste0(STRING_NUM, "_ID")) %>%
+      dplyr::rename_at("TOKEN", ~ paste0(STRING_NUM, "_TOKEN")) %>%
+      dplyr::rename_at("TOKEN_NUMBER", ~ paste0(STRING_NUM, "_ROW"))
   }
 
   # Col_one and col_two processed
@@ -65,7 +63,7 @@ oracle_merge_strings <- function(df, col_one, col_two){
     dplyr::select(-c(ONE_ID, TWO_ID, TOKEN_JOIN))
 
   # Generate connection for generated joined output
-  db_connection = one_two$src$con
+  db_connection <- one_two$src$con
 
   # Build SQL Query
   # This takes the next ONE_ROW term, ordered by TWO_ROW and partitioned by ID
@@ -86,11 +84,10 @@ oracle_merge_strings <- function(df, col_one, col_two){
   )
 
   # Generate output from query
-  output = tbl(db_connection, sql(sql_query))
+  output <- tbl(db_connection, sql(sql_query))
 
   # Rejoin back to original data, and remove now unnneeded ID term
   df %>%
     dplyr::inner_join(y = output, by = "ID") %>%
     dplyr::select(-ID)
-
 }
