@@ -19,7 +19,7 @@ oracle_create_table <- function(df, schema_name = NULL, table_name, overwrite = 
   # Define the full table name
   full_table_name <- table_name
   if (!is.null(schema_name)) {
-      full_table_name <- paste0(schema_name, ".", full_table_name)
+    full_table_name <- paste0(schema_name, ".", full_table_name)
   }
 
   # Create table statement
@@ -38,5 +38,4 @@ oracle_create_table <- function(df, schema_name = NULL, table_name, overwrite = 
 
   # Create the table
   DBI::dbExecute(df$src$con, as.character(sql_statement))
-
 }

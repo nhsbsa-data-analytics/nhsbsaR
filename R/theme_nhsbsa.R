@@ -38,10 +38,8 @@
 #'   nhsbsaR::theme_nhsbsa_gg() +
 #'   ggplot2::theme(axis.title.x = ggplot2::element_text()) +
 #'   ggplot2::xlab("Cut")
-#'
 #' @export
 theme_nhsbsa_gg <- function(plot, family = "sans") {
-
   ggplot2::theme(
 
     # Make the font of any text "sans" or another `family` parameter and
@@ -83,9 +81,7 @@ theme_nhsbsa_gg <- function(plot, family = "sans") {
     # white
     strip.text = ggplot2::element_text(face = "bold", hjust = 0),
     strip.background = ggplot2::element_rect(fill = "#FFFFFF")
-
   )
-
 }
 
 
@@ -110,9 +106,7 @@ theme_nhsbsa_gg <- function(plot, family = "sans") {
 #' @return
 #' @export
 theme_nhsbsa_hc <- function(family = "TT Arial") {
-
   highcharter::hc_theme(
-
     chart = list(
 
       # Make the font of any text "TT Arial" or another `family` parameter and
@@ -121,7 +115,6 @@ theme_nhsbsa_hc <- function(family = "TT Arial") {
 
       # Colour background NHS White
       backgroundColor = "#FFFFFF"
-
     ),
 
     # Make the title bold
@@ -135,7 +128,6 @@ theme_nhsbsa_hc <- function(family = "TT Arial") {
       verticalAlign = "top",
       itemHoverStyle = list(color = "#768692")
     ),
-
     xAxis = list(
 
       # Bold xaxis title
@@ -144,9 +136,7 @@ theme_nhsbsa_hc <- function(family = "TT Arial") {
       # Colour xaxis ticks and lines NHS Mid Grey
       lineColor = "#768692",
       tickColor = "#768692"
-
     ),
-
     yAxis = list(
 
       # Bold yaxis title
@@ -161,13 +151,11 @@ theme_nhsbsa_hc <- function(family = "TT Arial") {
 
       # Remove yaxis gridlines
       gridLineWidth = 0
+    ) # ,
 
-    )#,
 
-
-    #credits = list(
+    # credits = list(
     #  enabled = TRUE
-    #)
+    # )
   )
-
 }
