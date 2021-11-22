@@ -2,6 +2,7 @@
 
 export(con_nhsbsa)
 export(oracle_create_table)
+export(oracle_merge_strings)
 export(oracle_unnest_tokens)
 export(palette_nhsbsa)
 export(pool_nhsbsa)

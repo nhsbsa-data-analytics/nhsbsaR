@@ -24,5 +24,4 @@ nhsbsaR::palette_nhsbsa()
 nhsbsaR::palette_nhsbsa(palette = "gender")
 nhsbsaR::palette_nhsbsa(palette = "gradient")
 nhsbsaR::palette_nhsbsa(palette = "highlight")
-
 }
