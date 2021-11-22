@@ -4,12 +4,12 @@
 \alias{oracle_create_table}
 \title{Create table from \code{{dbplyr}} chain}
 \usage{
-oracle_create_table(df, schema_name, table_name, overwrite = TRUE)
+oracle_create_table(df, schema_name = NULL, table_name, overwrite = TRUE)
 }
 \arguments{
 \item{df}{Lazy Oracle table}
 
-\item{schema_name}{Name of the schema}
+\item{schema_name}{Name of the schema. Default is NULL (your own).}
 
 \item{table_name}{Name of the table}
 

@@ -14,9 +14,8 @@
 #'
 #' @examples
 #' table_db %>% nhsbsaR::oracle_unnest_tokens(col = "DUMMY")
-#'
 #' @export
-oracle_unnest_tokens <- function(df, col, drop = TRUE, pattern ="[:space:]") {
+oracle_unnest_tokens <- function(df, col, drop = TRUE, pattern = "[:space:]") {
 
   # Pull the connection
   db_connection <- df$src$con
@@ -35,7 +34,7 @@ oracle_unnest_tokens <- function(df, col, drop = TRUE, pattern ="[:space:]") {
     con = db_connection,
     "
       SELECT
-        ", dplyr::sql(output_cols),",
+        ", dplyr::sql(output_cols), ",
         ROW_NUMBER() OVER (PARTITION BY ", dplyr::sql(output_cols), " ORDER BY lines.column_value) AS TOKEN_NUMBER,
         TRIM(REGEXP_SUBSTR(", dplyr::sql(col), ", '[^", dplyr::sql(pattern), "]+', 1, lines.column_value))        AS TOKEN
 

@@ -14,13 +14,11 @@
 #' nhsbsaR::palette_nhsbsa(palette = "gender")
 #' nhsbsaR::palette_nhsbsa(palette = "gradient")
 #' nhsbsaR::palette_nhsbsa(palette = "highlight")
-#'
 #' @export
 palette_nhsbsa <- function(palette = NA, reverse = FALSE) {
 
   # Depending on the palette, get the colour names
-  if(!is.na(palette)) {
-
+  if (!is.na(palette)) {
     if (palette == "gender") {
       names <- c("Pink", "LightBlue")
     }
@@ -32,7 +30,6 @@ palette_nhsbsa <- function(palette = NA, reverse = FALSE) {
     if (palette == "highlight") {
       names <- c("LightGrey", "DarkBlue") # LightGrey is custom
     }
-
   } else {
 
     # Base on the Wong palette (https://davidmathlogic.com/colorblind/)
@@ -46,7 +43,6 @@ palette_nhsbsa <- function(palette = NA, reverse = FALSE) {
       "Red",
       "Pink"
     )
-
   }
 
   # Reverse names if necessary
@@ -64,7 +60,6 @@ palette_nhsbsa <- function(palette = NA, reverse = FALSE) {
 
   # Return the unnamed colours
   unname(colours)
-
 }
 
 
@@ -87,7 +82,6 @@ palette_nhsbsa <- function(palette = NA, reverse = FALSE) {
 #'     mapping = ggplot2::aes(x = carat, y = price, col = carat)
 #'   ) +
 #'   nhsbsaR::scale_colour_nhsbsa(palette = "gradient")
-#'
 #' @export
 scale_colour_nhsbsa <- function(palette = NA,
                                 n_discrete = 0,
@@ -121,9 +115,7 @@ scale_colour_nhsbsa <- function(palette = NA,
       na.value = palette_nhsbsa(palette = "highlight")[[1]],
       ...
     )
-
   }
-
 }
 
 
@@ -162,7 +154,7 @@ scale_fill_nhsbsa <- function(palette = NA,
     # Return scale fill manual
     ggplot2::scale_fill_manual(values = colours, ...)
 
-  # Deal with gradient palette (discrete)
+    # Deal with gradient palette (discrete)
   } else if (n_discrete > 0) {
 
     # Return manual fill manual gradient
@@ -170,7 +162,7 @@ scale_fill_nhsbsa <- function(palette = NA,
       values = grDevices::colorRampPalette(colors = colours, ...)(n_discrete)
     )
 
-  # Deal with gradient palette (continuous)
+    # Deal with gradient palette (continuous)
   } else {
 
     # Return the fill gradient
@@ -180,7 +172,5 @@ scale_fill_nhsbsa <- function(palette = NA,
       na.value = palette_nhsbsa(palette = "highlight")[[1]],
       ...
     )
-
   }
-
 }

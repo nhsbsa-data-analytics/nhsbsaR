@@ -46,5 +46,4 @@ ggplot2::ggplot(data = ggplot2::diamonds) +
   nhsbsaR::theme_nhsbsa_gg() +
   ggplot2::theme(axis.title.x = ggplot2::element_text()) +
   ggplot2::xlab("Cut")
-
 }
