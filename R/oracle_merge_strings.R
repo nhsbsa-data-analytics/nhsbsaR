@@ -4,90 +4,111 @@
 #' The result is a 'master' address string that contains all parts of each address
 #'
 #' @param df Lazy Oracle table
-#' @param col_one - first string column
-#' @param col_two - second string column
+#' @param first_col First column
+#' @param second_col Second column
+#' @param merge_col Name to give merged column
 #'
-#' @details requires nhsbsaR::oracle_unnest_tokens() function
+#' @details Requires `nhsbsaR::oracle_unnest_tokens()`.
 #'
 #' @examples
 #' table_db %>% nhsbsaR::oracle_merge_strings(ADDRESS_ONE, ADDRESS_TWO)
 #' @returns original df with additional merged column added
 #'
 #' @export
-oracle_merge_strings <- function(df, col_one, col_two) {
+oracle_merge_strings <- function(df, first_col, second_col, merge_col) {
 
-  # Default: ties.method = "first" thus no duplicates
-  df <- df %>%
-    dplyr::mutate(ID = dplyr::row_number({{ col_one }}))
+  # Process first column
+  first_col_df <- df %>%
+    # Get the unique values
+    dplyr::distinct(!!sym(first_col)) %>%
+    # Tokenise
+    nhsbsaR::oracle_unnest_tokens(
+      col = first_col,
+      drop = FALSE
+    ) %>%
+    # Give each token a rank within the string (e.g. 'CITY-1', 'CITY-2', etc)
+    dplyr::rename(
+      TOKEN = TOKEN,
+      FIRST_COL_TOKEN_NUMBER = TOKEN_NUMBER
+    ) %>%
+    dplyr::group_by(!!sym(first_col), TOKEN) %>%
+    dplyr::mutate(
+      TOKEN_RANK = dplyr::row_number(FIRST_COL_TOKEN_NUMBER)
+    ) %>%
+    dplyr::ungroup()
 
+  # Process second column
+  second_col_df <- df %>%
+    # Get the unique values
+    dplyr::distinct(!!sym(second_col)) %>%
+    # Tokenise
+    nhsbsaR::oracle_unnest_tokens(
+      col = second_col,
+      drop = FALSE
+    ) %>%
+    # Give each token a rank within the string (e.g. 'CITY-1', 'CITY-2', etc)
+    dplyr::rename(
+      TOKEN = TOKEN,
+      SECOND_COL_TOKEN_NUMBER = TOKEN_NUMBER
+    ) %>%
+    dplyr::group_by(!!sym(second_col), TOKEN) %>%
+    dplyr::mutate(
+      TOKEN_RANK = dplyr::row_number(SECOND_COL_TOKEN_NUMBER)
+    ) %>%
+    dplyr::ungroup()
 
-  # Rename selected columns, for ease of use during code
-  df_edit <- df %>%
-    dplyr::select(ID, {{ col_one }}, {{ col_two }}) %>%
-    dplyr::rename_at(c(2, 3), ~ c("STRING_ONE", "STRING_TWO"))
+  # Get the unique combinations we want to merge (incase there are duplicates)
+  distinct_df <- df %>%
+    dplyr::distinct(!!sym(first_col), !!sym(second_col))
 
-  string_edit <- function(df, col) {
+  # Join the tokenised data together (attempt to join by TOKEN and TOKEN_RANK)
+  distinct_df <-
+    dplyr::full_join(
+      x = first_col_df %>% dplyr::inner_join(y = distinct_df, copy = TRUE),
+      y = second_col_df %>% dplyr::inner_join(y = distinct_df, copy = TRUE),
+      copy = TRUE
+    )
 
-    # Get 'ONE' or 'TWO' from designated string name
-    STRING_NUM <- substr({{ col }}, 8, 11)
-
-    df %>%
-      dplyr::select(ID, {{ col }}) %>%
-      # Unnest token using nhsbsaR function
-      nhsbsaR::oracle_unnest_tokens(col = {{ col }}, drop = TRUE) %>%
-      dplyr::group_by(ID, TOKEN) %>%
-      # Give each token a rank, so that each occurrence of a word can be numbered
-      # E.g. 'CITY-1', 'CITY-2', 'CITY-3' etc
-      dplyr::mutate(TOKEN_COUNT = RANK(TOKEN_NUMBER)) %>%
-      dplyr::ungroup() %>%
-      # Create bespoke joining term, which is ID, which token and the token occurence number
-      # This controls and manages a later outer_join
-      dplyr::mutate(TOKEN_JOIN = paste(TOKEN, TOKEN_COUNT, ID, sep = "*")) %>%
-      dplyr::select(ID, TOKEN, TOKEN_JOIN, TOKEN_NUMBER) %>%
-      # As function output is used twice, label vars depending on whether col_one or col_two is being processed
-      dplyr::rename_at("ID", ~ paste0(STRING_NUM, "_ID")) %>%
-      dplyr::rename_at("TOKEN", ~ paste0(STRING_NUM, "_TOKEN")) %>%
-      dplyr::rename_at("TOKEN_NUMBER", ~ paste0(STRING_NUM, "_ROW"))
-  }
-
-  # Col_one and col_two processed
-  one <- df_edit %>%
-    string_edit(col = STRING_ONE)
-  two <- df_edit %>%
-    string_edit(col = STRING_TWO)
-
-  # Join 2 outputs on bespoke generated joining term and remove unneeded vars
-  one_two <- one %>%
-    dplyr::full_join(y = two, by = "TOKEN_JOIN") %>%
-    dplyr::mutate(ID = COALESCE(ONE_ID, TWO_ID)) %>%
-    dplyr::select(-c(ONE_ID, TWO_ID, TOKEN_JOIN))
-
-  # Generate connection for generated joined output
-  db_connection <- one_two$src$con
+  # Pull the DB connection
+  db_connection = df$src$con
 
   # Build SQL Query
-  # This takes the next ONE_ROW term, ordered by TWO_ROW and partitioned by ID
-  # LISTAGG then concatenates these ID-rowwise terms into a single cell
   sql_query <- dbplyr::build_sql(
     con = db_connection,
-    "WITH LT AS (
-    SELECT ID, ONE_ROW, TWO_ROW,
-    COALESCE(ONE_TOKEN, TWO_TOKEN) AS LEAD_TOKEN,
-    COALESCE(ONE_ROW, LEAD(ONE_ROW IGNORE NULLS) OVER (PARTITION BY ID ORDER BY TWO_ROW)) AS LEAD_ROW
-    FROM (", dbplyr::sql_render(one_two), ")
+    "WITH LT AS
+    (
+      SELECT ",
+        dplyr::sql(first_col), ", ",
+        dplyr::sql(second_col), ",
+        FIRST_COL_TOKEN_NUMBER,
+        SECOND_COL_TOKEN_NUMBER,
+        TOKEN,
+        COALESCE(FIRST_COL_TOKEN_NUMBER, LEAD(FIRST_COL_TOKEN_NUMBER IGNORE NULLS) OVER (PARTITION BY ", dplyr::sql(first_col), ", ", dplyr::sql(second_col), " ORDER BY SECOND_COL_TOKEN_NUMBER)) AS LEAD_TOKEN_NUMBER
+
+      FROM
+        (", dbplyr::sql_render(distinct_df), ")
     )
-    SELECT
-    ID,
-    LISTAGG(LEAD_TOKEN, ' ') within group (order by LEAD_ROW, TWO_ROW) as MERGE_STRING
-    FROM LT
-    GROUP BY ID"
+
+    SELECT ",
+      dplyr::sql(first_col), ", ",
+      dplyr::sql(second_col), ",
+      LISTAGG(TOKEN, ' ') within group (order by LEAD_TOKEN_NUMBER, SECOND_COL_TOKEN_NUMBER) as ", dplyr::sql(merge_col), "
+
+    FROM
+      LT
+
+    GROUP BY ",
+      dplyr::sql(first_col), ", ",
+      dplyr::sql(second_col)
+
   )
 
-  # Generate output from query
-  output <- tbl(db_connection, sql(sql_query))
+  # Generate merged strings from the query
+  merged_df <- tbl(src = db_connection, dplyr::sql(sql_query))
 
-  # Rejoin back to original data, and remove now unnneeded ID term
+  # Output the original data with the merged string joined to it
   df %>%
-    dplyr::inner_join(y = output, by = "ID") %>%
-    dplyr::select(-ID)
+    dplyr::inner_join(y = merged_df)
+
 }
+
