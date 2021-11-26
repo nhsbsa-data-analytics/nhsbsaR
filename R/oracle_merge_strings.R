@@ -92,7 +92,7 @@ oracle_merge_strings <- function(df, first_col, second_col, merge_col) {
   )
 
   # Generate merged strings from the query
-  merged_df <- tbl(src = db_connection, dplyr::sql(sql_query))
+  merged_df <- dplyr::tbl(src = db_connection, dplyr::sql(sql_query))
 
   # Output the original data with the merged string joined to it
   df %>%
