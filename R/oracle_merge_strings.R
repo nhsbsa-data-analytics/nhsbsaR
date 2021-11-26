@@ -24,21 +24,21 @@ oracle_merge_strings <- function(df, first_col, second_col, merge_col) {
 
   # Get the unique combinations we want to merge (in case there are duplicates)
   distinct_df <- df %>%
-    dplyr::distinct(!!sym(first_col), !!sym(second_col))
+    dplyr::distinct(!!dplyr::sym(first_col), !!dplyr::sym(second_col))
 
   # Process columns (loop over each one as we repeat the processing)
   col_dfs <- list()
   for (col in c(first_col, second_col)) {
     col_dfs[[col]] <- distinct_df %>%
       # Get the unique values
-      dplyr::distinct(!!sym(col)) %>%
+      dplyr::distinct(!!dplyr::sym(col)) %>%
       # Tokenise
       nhsbsaR::oracle_unnest_tokens(
         col = col,
         drop = FALSE
       ) %>%
       # Give each token a rank within the string (e.g. 'CITY-1', 'CITY-2', etc)
-      dplyr::group_by(!!sym(col), TOKEN) %>%
+      dplyr::group_by(!!dplyr::sym(col), TOKEN) %>%
       dplyr::mutate(TOKEN_RANK = dplyr::row_number(TOKEN_NUMBER)) %>%
       dplyr::ungroup() %>%
       # Rename the token number column
