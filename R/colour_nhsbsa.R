@@ -28,7 +28,7 @@ palette_nhsbsa <- function(palette = NA, reverse = FALSE) {
     }
 
     if (palette == "highlight") {
-      names <- c("LightGrey", "DarkBlue") # LightGrey is custom
+      names <- c("MidGrey", "DarkBlue")
     }
   } else {
 
@@ -54,8 +54,7 @@ palette_nhsbsa <- function(palette = NA, reverse = FALSE) {
   # colours added)
   colours <- c(
     NHSRtheme::get_nhs_colours(),
-    "White" = "#FFFFFF",
-    "LightGrey" = "#DDE1E4"
+    "White" = "#FFFFFF"
   )[names]
 
   # Return the unnamed colours
