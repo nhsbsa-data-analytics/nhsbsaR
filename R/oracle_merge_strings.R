@@ -24,7 +24,7 @@ oracle_merge_strings <- function(df, first_col, second_col, merge_col) {
 
   # Get the unique combinations we want to merge (in case there are duplicates)
   distinct_df <- df %>%
-    dplyr::distinct(dplyr::all_of(c(first_col, second_col)))
+    dplyr::distinct(.data[[first_col]], .data[[second_col]])
 
   # Process columns (loop over each one as we repeat the processing)
   col_dfs <- list()
@@ -44,18 +44,14 @@ oracle_merge_strings <- function(df, first_col, second_col, merge_col) {
       # Rename the token number column
       dplyr::rename("{col}_TOKEN_NUMBER" := TOKEN_NUMBER) %>%
       # Join back to the unique combinations (handy for full_join later)
-      dplyr::inner_join(
-        y = distinct_df,
-        copy = TRUE
-      )
+      dplyr::inner_join(y = distinct_df)
   }
 
   # Join the tokenised data together (attempt to join by TOKEN and TOKEN_RANK)
   distinct_df <-
     dplyr::full_join(
       x = col_dfs[[first_col]],
-      y = col_dfs[[second_col]],
-      copy = TRUE
+      y = col_dfs[[second_col]]
     )
 
   # Pull the DB connection
@@ -96,5 +92,8 @@ oracle_merge_strings <- function(df, first_col, second_col, merge_col) {
 
   # Output the original data with the merged string joined to it
   df %>%
-    dplyr::inner_join(y = merged_df)
+    dplyr::inner_join(
+      y = merged_df,
+      na_matches = "na"
+    )
 }
