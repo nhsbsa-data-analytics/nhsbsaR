@@ -92,8 +92,5 @@ oracle_merge_strings <- function(df, first_col, second_col, merge_col) {
 
   # Output the original data with the merged string joined to it
   df %>%
-    dplyr::inner_join(
-      y = merged_df,
-      na_matches = "na"
-    )
+    dplyr::inner_join(y = merged_df)
 }
