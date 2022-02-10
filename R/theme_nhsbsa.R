@@ -118,44 +118,57 @@ theme_nhsbsa_hc <- function(family = "TT Arial") {
     ),
 
     # Make the title bold
-    title = list(style = list(fontWeight = "bold")),
+    title = list(style = list(fontWeight = "bold", color = "#231f20"))),
 
     # Left align the subtitle
-    subtitle = list(align = "left"),
+    subtitle = list(
+      align = "left",
+      style = list(color = "#231f20")
+    ),
 
     # Move the legend to the top and set the hover colour to NHS Mid Grey
+    # and the text to black
     legend = list(
       verticalAlign = "top",
-      itemHoverStyle = list(color = "#768692")
+      itemHoverStyle = list(color = "#768692"),
+      title = list(style = list(color = "#231f20")),
+      style = list(color = "#231f20"),
     ),
     xAxis = list(
 
-      # Bold xaxis title
-      title = list(style = list(fontWeight = "bold")),
+      # Bold xaxis title and colour black
+      title = list(style = list(fontWeight = "bold", color = "#231f20")),
 
-      # Colour xaxis ticks and lines NHS Mid Grey
-      lineColor = "#768692",
-      tickColor = "#768692"
+      # Colour xaxis labels black
+      labels = list(style = list(color = "#231f20")),
+      
+      # Colour xaxis ticks and lines black
+      lineColor = "#231f20",
+      tickColor = "#231f20"
     ),
     yAxis = list(
 
-      # Bold yaxis title
-      title = list(style = list(fontWeight = "bold")),
+      # Bold yaxis title and colour black
+      title = list(style = list(fontWeight = "bold", color = "#231f20")),
+      
+      # Colour yaxis labels black
+      labels = list(style = list(color = "#231f20")),
 
       # Add yaxis line
       lineWidth = 1,
 
-      # Colour yaxis ticks and lines NHS Mid Grey
-      lineColor = "#768692",
-      tickColor = "#768692",
+      # Colour yaxis ticks and lines black
+      lineColor = "#231f20",
+      tickColor = "#231f20",
 
       # Remove yaxis gridlines
       gridLineWidth = 0
-    ) # ,
+    ),
 
 
-    # credits = list(
-    #  enabled = TRUE
-    # )
+    credits = list(
+      #enabled = TRUE
+      style = list(color = "#231f20")
+    )
   )
 }
