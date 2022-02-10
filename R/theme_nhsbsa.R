@@ -132,7 +132,7 @@ theme_nhsbsa_hc <- function(family = "TT Arial") {
       verticalAlign = "top",
       itemHoverStyle = list(color = "#768692"),
       title = list(style = list(color = "#231f20")),
-      style = list(color = "#231f20"),
+      style = list(color = "#231f20")
     ),
     
     xAxis = list(
