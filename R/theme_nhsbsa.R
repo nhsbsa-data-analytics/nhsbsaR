@@ -118,7 +118,7 @@ theme_nhsbsa_hc <- function(family = "TT Arial") {
     ),
 
     # Make the title bold
-    title = list(style = list(fontWeight = "bold", color = "#231f20"))),
+    title = list(style = list(fontWeight = "bold", color = "#231f20")),
 
     # Left align the subtitle
     subtitle = list(
@@ -134,6 +134,7 @@ theme_nhsbsa_hc <- function(family = "TT Arial") {
       title = list(style = list(color = "#231f20")),
       style = list(color = "#231f20"),
     ),
+    
     xAxis = list(
 
       # Bold xaxis title and colour black
@@ -164,7 +165,11 @@ theme_nhsbsa_hc <- function(family = "TT Arial") {
       # Remove yaxis gridlines
       gridLineWidth = 0
     ),
-
+    
+    # Make the caption black
+    caption = list(
+      style = list(color = "#231f20")
+    ),
 
     credits = list(
       #enabled = TRUE
