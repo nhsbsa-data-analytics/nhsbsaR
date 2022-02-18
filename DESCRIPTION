@@ -22,6 +22,7 @@ Imports:
     ggplot2,
     highcharter,
     NHSRtheme,
-    odbc
+    odbc,
+    pool
 Remotes: 
     nhs-r-community/NHSRtheme

@@ -5,6 +5,7 @@
 \title{Pool to NHSBSA DB}
 \usage{
 pool_nhsbsa(
+  dsn = "FBS_8192k",
   driver = "Oracle in OraClient19Home1",
   database,
   username = Sys.getenv(paste0("DB_", database, "_USERNAME")),
@@ -12,6 +13,11 @@ pool_nhsbsa(
 )
 }
 \arguments{
+\item{dsn}{Default is "FBS_8192k" with Fetch Buffer Size of 8192k created for us
+by Platform Services on Azure VDs. If, for some reason, this DSN is unavailable
+on your VD, set this to NULL in order to use the default "Oracle in OraClient19Home1"
+driver with default settings.}
+
 \item{driver}{String, ODBC driver to connect to the DB. Default is correct
 but an argument is provided in case this ever changes.}
 
