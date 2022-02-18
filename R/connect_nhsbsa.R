@@ -4,6 +4,10 @@
 #' the ODBC driver installed, but if not you may have to raise a service
 #' request with IT.
 #'
+#' @param dsn Default is "FBS_8192k" with Fetch Buffer Size of 8192k created for us
+#'   by Platform Services on Azure VDs. If, for some reason, this DSN is unavailable
+#'   on your VD, set this to NULL in order to use the default "Oracle in OraClient19Home1"
+#'   driver with default settings.
 #' @param driver String, ODBC driver to connect to the DB. Default is correct
 #'   but an argument is provided in case this ever changes.
 #' @param database String, name of the DB - one of c("DALP", "DWCP")).
@@ -58,6 +62,8 @@
 #'
 #' @export
 con_nhsbsa <- function(
+
+  dsn       = "FBS_8192k",
   driver    = "Oracle in OraClient19Home1",
   database,
   username  = Sys.getenv(paste0("DB_", database, "_USERNAME")),
@@ -66,6 +72,7 @@ con_nhsbsa <- function(
 
   DBI::dbConnect(
     drv    = odbc::odbc(),
+    dsn    = dsn,
     Driver = driver,
     DBQ    = Sys.getenv(paste0("DB_", database, "_CONNECTION_STRING")),
     UID    = username,
@@ -82,6 +89,10 @@ con_nhsbsa <- function(
 #' Hopefully you will already have the ODBC driver installed, but if not you may
 #' have to raise a service request with IT.
 #'
+#' @param dsn Default is "FBS_8192k" with Fetch Buffer Size of 8192k created for us
+#'   by Platform Services on Azure VDs. If, for some reason, this DSN is unavailable
+#'   on your VD, set this to NULL in order to use the default "Oracle in OraClient19Home1"
+#'   driver with default settings.
 #' @param driver String, ODBC driver to connect to the DB. Default is correct
 #'   but an argument is provided in case this ever changes.
 #' @param database String, name of the DB - one of c("DALP", "DWCP")).
@@ -136,6 +147,7 @@ con_nhsbsa <- function(
 #'
 #' @export
 pool_nhsbsa <- function(
+  dsn       = "FBS_8192k",
   driver    = "Oracle in OraClient19Home1",
   database,
   username  = Sys.getenv(paste0("DB_", database, "_USERNAME")),
@@ -144,6 +156,7 @@ pool_nhsbsa <- function(
 
   pool::dbPool(
     drv    = odbc::odbc(),
+    dsb    = dsn,
     Driver = driver,
     DBQ    = Sys.getenv(paste0("DB_", database, "_CONNECTION_STRING")),
     UID    = username,
