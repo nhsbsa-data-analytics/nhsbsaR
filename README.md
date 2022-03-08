@@ -1,6 +1,6 @@
 # NHSBSA R package
 
-Helper package for common NHSBSA R actions:
+Helper package for common NHSBSA R actions. This R package has been developed by the NHS Business Services Authority Data Science team.
 
 * Colour / theme static (`{ggplot2}`) and interactive (`{highcharter}`) charts to suit NHS and NHSBSA guidelines
 
