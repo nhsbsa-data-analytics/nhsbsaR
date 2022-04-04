@@ -20,6 +20,8 @@
 #' @returns original df with additional merged column added
 #'
 #' @export
+#'
+#' @import magrittr
 oracle_merge_strings <- function(df, first_col, second_col, merge_col) {
 
   # Get the unique combinations we want to merge (in case there are duplicates)
