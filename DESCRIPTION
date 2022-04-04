@@ -28,6 +28,8 @@ Imports:
     highcharter,
     NHSRtheme,
     odbc,
-    pool
+    readr,
+    pool,
+    magrittr
 Remotes: 
     nhs-r-community/NHSRtheme
