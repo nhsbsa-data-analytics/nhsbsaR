@@ -47,7 +47,7 @@ estimate_runtime <- function(code, subset_sizes, full_size) {
     start <- Sys.time()
 
     #Execute the code that needs timing
-    eval(parse(text=code), enclos = NULL)
+    eval(parse(text=code))
 
     #Running time in seconds
     t <- as.numeric(Sys.time() - start, units = "secs")
