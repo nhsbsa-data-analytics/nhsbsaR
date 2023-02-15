@@ -1,10 +1,10 @@
 #' Estimate runtime
 #'
-#' Estimate runtime of fitting a computationally intensive model to a big dataset prior to a 'final' run, which, in some cases, may be measured in hours or even days. The runtime is estimated by extrapolation from a best-fitting model (power, exponential or linear) fitted to a sample of runtimes in a small range.
+#' Estimate runtime of fitting a computationally intensive model to a big dataset prior to the run itself, which, in some cases, may be measured in hours or days. The runtime is estimated by extrapolation from a best-fitting model (power, exponential or linear) fitted to a sample of runtimes in a small range.
 #'
 #' @param code String: code executing the model in one line. Should specify execution of an iterable subset of the full dataset. Usually, this is done by setting the data argument inside the model's function to, for example, `DT[1:i]` or `DT[sample(.N, i)]` for data.tables or `df[1:i,]` for data.frames.
-#' @param subset_sizes Numeric vector: a range of subsets of the full dataset that have manageable running times (e.g. from several seconds to several minutes) that ideally extends as far as practical into the full dataset. May require some trial-and-error to set optimally.
-#' @param full_size Numeric value: full size of the dataset, i.e. `nrow(DT)`. Has to be set by hand, because we aren't passing the full dataset to the function. Can also be set to any number to estimate the runtime of a model on a similar dataset of any size.
+#' @param subset_sizes Numeric vector: a range of subsets of the full dataset that have manageable running times (e.g. from several seconds to several minutes) that extends as far as practical into the full dataset. May require some trial-and-error to determine an optimal trade-off between the time it takes to produce an estimate and the accuracy of the estimate. As we would commonly want to estimate long runtimes fairly quickly, the accuracy won't be great, but the estimate would still be useful as a ballpark indicator.
+#' @param full_size Numeric value: full size of the dataset, i.e. `nrow(DT)`. Has to be set manually, because we aren't passing the full dataset object to the function. Can also be set to any number to estimate the runtime of a model on a similar dataset of any size.
 #'
 #' @return Annotated `ggplot2` graph showing estimated runtime over the full dataset's size.
 #'
@@ -33,7 +33,6 @@
 #' @export
 estimate_runtime <- function(code, subset_sizes, full_size) {
 
-  library(data.table)
   library(ggplot2)
 
   R <- data.frame()
@@ -47,18 +46,9 @@ estimate_runtime <- function(code, subset_sizes, full_size) {
     start <- Sys.time()
 
     # Execute the code that needs timing
+    eval(parse(text=code))
 
-      # Original version that worked when estimate_runtime was defined in a global env,
-      # but doesn't work if defined in a package
-      #eval(parse(text=code))
-
-      # Version that should work if function is defined in a package (after https://stackoverflow.com/a/75452666/2753688)
-
-      code <- substitute(code)
-      do.call("substitute", list(code, list(i=i))) |> eval.parent()
-
-
-    # Running time in seconds
+    # Record running time in seconds
     t <- as.numeric(Sys.time() - start, units = "secs")
 
     # Collect the results from each loop
