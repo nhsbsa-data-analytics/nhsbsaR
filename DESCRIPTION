@@ -1,11 +1,11 @@
 Package: nhsbsaR
 Title: NHSBSA R package
-Version: 0.0.0.9000
+Version: 0.0.0.9100
 Authors@R: 
     c(person(given = "Adam",
-           family = "Ivison",
-           role = c("aut", "cre"),
-           email = "adam.ivison@nhs.net"),
+			 family = "Ivison",
+			 role = c("aut", "cre"),
+			 email = "adam.ivison@nhs.net"),
       person(given = "Mihail",
              family = "Garbuzov",
              role = c("ctb"),
@@ -18,9 +18,10 @@ BugReports: https://github.com/nhsbsa-data-analytics/nhsbsaR/issues
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.3
 Depends: 
-    R (>= 3.2.0)
+    R (>= 4.2.0),
+	data.table
 Imports: 
     DBI,
     dbplyr,
