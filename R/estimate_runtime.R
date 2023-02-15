@@ -1,6 +1,6 @@
 #' Estimate runtime
 #'
-#' Estimate runtime of fitting a computationally intensive model to a big dataset prior to a 'final' run, which, in some cases, may be measured in hours or even days. The runtime is estimated by extrapolation from a sample of runtimes in a small range.
+#' Estimate runtime of fitting a computationally intensive model to a big dataset prior to a 'final' run, which, in some cases, may be measured in hours or even days. The runtime is estimated by extrapolation from a best-fitting model (power, exponential or linear) fitted to a sample of runtimes in a small range.
 #'
 #' @param code String: code executing the model in one line. Should specify execution of an iterable subset of the full dataset. Usually, this is done by setting the data argument inside the model's function to, for example, `DT[1:i]` or `DT[sample(.N, i)]` for data.tables or `df[1:i,]` for data.frames.
 #' @param subset_sizes Numeric vector: a range of subsets of the full dataset that have manageable running times (e.g. from several seconds to several minutes) that ideally extends as far as practical into the full dataset. May require some trial-and-error to set optimally.
@@ -33,26 +33,35 @@
 #' @export
 estimate_runtime <- function(code, subset_sizes, full_size) {
 
-  require(data.table)
-  require(ggplot2)
+  library(data.table)
+  library(ggplot2)
 
-  R <- data.table()
+  R <- data.frame()
 
   pb <- txtProgressBar(min = 0, max = length(subset_sizes), style = 3)
   step = 1
 
   for (i in subset_sizes) {
 
-    #Start time
+    # Start time
     start <- Sys.time()
 
-    #Execute the code that needs timing
-    eval(parse(text=code))
+    # Execute the code that needs timing
 
-    #Running time in seconds
+      # Original version that worked when estimate_runtime was defined in a global env,
+      # but doesn't work if defined in a package
+      #eval(parse(text=code))
+
+      # Version that should work if function is defined in a package (after https://stackoverflow.com/a/75452666/2753688)
+
+      code <- substitute(code)
+      do.call("substitute", list(code, list(i=i))) |> eval.parent()
+
+
+    # Running time in seconds
     t <- as.numeric(Sys.time() - start, units = "secs")
 
-    #Collect the results from each loop
+    # Collect the results from each loop
     R <- rbind(R, data.frame(n = i, t = t))
 
     setTxtProgressBar(pb, step)
@@ -63,9 +72,9 @@ estimate_runtime <- function(code, subset_sizes, full_size) {
   close(pb)
   rm(pb, step, start,t)
 
-  m1 <- lm(log(t)~log(n), data=R) #power model
-  m2 <- lm(log(t)~n, data=R) #exponential model
-  m3 <- lm(t~n, data=R) #linear model
+  m1 <- lm(log(t)~log(n), data=R) # Power model
+  m2 <- lm(log(t)~n, data=R) # Exponential model
+  m3 <- lm(t~n, data=R) # Linear model
 
   r1 <- summary(m1)$r.squared
   r2 <- summary(m2)$r.squared
