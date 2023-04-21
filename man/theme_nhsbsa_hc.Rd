@@ -10,9 +10,6 @@ theme_nhsbsa_hc(family = "TT Arial")
 \item{family, }{String font family to use (this must be installed and loaded).
 Default value is "TT Arial"}
 }
-\value{
-
-}
 \description{
 Theme an NHSBSA highcharter plot. We would like to take several steps to
 brand a standard highcharter plot to an NHSBSA looking chart. These include:
