@@ -2,7 +2,7 @@
 % Please edit documentation in R/chart_hc_imd_bar.R
 \name{chart_hc_imd_bar}
 \alias{chart_hc_imd_bar}
-\title{chart_hc_imd_bar function}
+\title{Highcharts bar plot for values split by IMD decile}
 \usage{
 chart_hc_imd_bar(
   df,
