@@ -1,4 +1,4 @@
-#' chart_hc_imd_bar function
+#' Highcharts bar plot for values split by IMD decile
 #'
 #' @description
 #' Visualisation creation function: Create highchart object showing bar plot IMD decile distribution.
@@ -67,6 +67,16 @@ chart_hc_imd_bar <- function(
 
   # review input parameters, providing error/warning messages as required and aborting call
 
+  # imd_col
+  if(!imd_col %in% colnames(df)){
+    stop(paste0("Invalid parameter value (imd_col) : Field name (",imd_col,") does not exist in supplied data"), call. = FALSE)
+  }
+
+  # value_col
+  if(!value_col %in% colnames(df)){
+    stop(paste0("Invalid parameter value (value_col) : Field name (",value_col,") does not exist in supplied data"), call. = FALSE)
+  }
+
   # highlight_core20
   if(!highlight_core20 %in% c(TRUE,FALSE)){
     stop("Invalid parameter value (highlight_core20) : Must be one of TRUE/FALSE", call. = FALSE)
@@ -98,8 +108,9 @@ chart_hc_imd_bar <- function(
 
   # define the data object based on parameters
   df <- df |>
-    dplyr::mutate(IMD_COL = df[[imd_col]],
-                  VAL_COL = df[[value_col]])
+    dplyr::select(IMD_COL := {{ imd_col }},
+                  VAL_COL := {{ value_col }}
+    )
 
   # define grouping based on parameters
   if(highlight_core20 == TRUE){
@@ -132,17 +143,14 @@ chart_hc_imd_bar <- function(
 
   # if core20 should be highlighted add this to the tooltip
   if(highlight_core20 == TRUE){
-    tooltip_text <- paste0(
-      tooltip_text,
-      "<b>Core20 Classification:</b> {point.GRP_COL} <br>"
-    )
+    tooltip_text <- glue::glue("{tooltip_text}<b>Core20 Classification:</b> {{point.GRP_COL}}<br>")
   }
 
   # add IMD decile and value to the tooltip
-  tooltip_text <- paste0(
-    tooltip_text,
-    "<b>IMD decile:</b> {point.IMD_COL} <br>",
-    "<b>",metric_def,":</b> ",value_prefix,"{point.VAL_COL:,.",value_dp,"f}",order_of_magnitude
+  tooltip_text <- glue::glue(
+    "{tooltip_text}\\
+    <b>IMD decile:</b> {{point.IMD_COL}} <br>\\
+    <b>{metric_def}:</b> {value_prefix}{{point.VAL_COL:,.{value_dp}f}}{order_of_magnitude}"
   )
 
 
@@ -153,11 +161,11 @@ chart_hc_imd_bar <- function(
 
   # add the prefix and order of magnitude characters (if supplied)
   if(value_prefix != "" & order_of_magnitude != ""){
-    y_axis_lbl <- paste0(y_axis_lbl, " (", value_prefix, order_of_magnitude, ")")
+    y_axis_lbl <- glue::glue("{y_axis_lbl} ({value_prefix}{order_of_magnitude})")
   } else if(value_prefix != "" & order_of_magnitude == ""){
-    y_axis_lbl <- paste0(y_axis_lbl, " (", value_prefix, ")")
+    y_axis_lbl <- glue::glue("{y_axis_lbl} ({value_prefix})")
   } else if(value_prefix == "" & order_of_magnitude != ""){
-    y_axis_lbl <- paste0(y_axis_lbl, " (", order_of_magnitude, ")")
+    y_axis_lbl <- glue::glue("{y_axis_lbl} ({order_of_magnitude})")
   }
 
 
@@ -173,7 +181,7 @@ chart_hc_imd_bar <- function(
         group = GRP_COL
       ),
       dataLabels = list(enabled = show_lbl,
-                        format = paste0(value_prefix,"{point.VAL_COL:,.",value_dp,"f}",order_of_magnitude),
+                        format = glue::glue("{value_prefix}{{point.VAL_COL:,.{value_dp}f}}{order_of_magnitude}"),
                         inside = FALSE,
                         style = list(color = "#000000")
                         )
@@ -183,8 +191,7 @@ chart_hc_imd_bar <- function(
     highcharter::hc_xAxis(
       min = 1,
       max = 11, # Pad to ensure we can see the 10 label
-      # categories = c(NA, "1<br>Most<br>deprived", rep(NA, 8), "10<br>Least<br>deprived"),
-      categories = c(NA, "1<br>Most<br>deprived", seq(2,9), "10<br>Least<br>deprived",""),
+      categories = c(NA,"1<br>Most<br>deprived", seq(2,9), "10<br>Least<br>deprived",""),
       labels = list(step = 1),
       title = list(text = "Deprivation decile", y=-25)
     ) |>
