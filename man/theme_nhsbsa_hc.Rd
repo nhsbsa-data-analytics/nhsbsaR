@@ -2,25 +2,19 @@
 % Please edit documentation in R/theme_nhsbsa.R
 \name{theme_nhsbsa_hc}
 \alias{theme_nhsbsa_hc}
-\title{Theme an NHSBSA highcharter plot}
+\title{Custom NHSBSA highcharter theme}
 \usage{
-theme_nhsbsa_hc(family = "TT Arial")
+theme_nhsbsa_hc(.hc, palette = NA, stack = "normal", family = "TT Arial")
 }
 \arguments{
-\item{family, }{String font family to use (this must be installed and loaded).
-Default value is "TT Arial"}
+\item{palette}{Which colour palette to use from the \code{nhsbsaR} package.}
+
+\item{stack}{Stack option for highcharter.}
+}
+\value{
+Theme data
 }
 \description{
-Theme an NHSBSA highcharter plot. We would like to take several steps to
-brand a standard highcharter plot to an NHSBSA looking chart. These include:
-\itemize{
-\item Make the font of any text "TT Arial" or another \code{family} parameter.
-\item Colour any text NHS Black
-\item Colour background NHS White
-\item Make the title and axis titles bold
-\item Move the legend to the top and set the hover colour to NHS Mid Grey
-\item Colour axis ticks and lines NHS Mid Grey
-\item Remove yaxis gridlines (x axis has no gridlines by default)
-\item Add credits (Note: Not working at the moment)
-}
+Based on the nhsbsaR highcharter theme, since it returns a list we can edit
+it to the specific theme for this shiny app.
 }

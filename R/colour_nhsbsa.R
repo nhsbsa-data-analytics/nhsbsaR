@@ -73,7 +73,7 @@ palette_nhsbsa <- function(palette = NA, reverse = FALSE) {
 #' @param reverse Boolean, to reverse the palette. Default is FALSE.
 #' @param ..., arguments to pass on
 #'
-#' @return
+#' @return Colour palette
 #'
 #' @examples
 #' ggplot2::ggplot(data = ggplot2::diamonds) +
@@ -129,7 +129,7 @@ scale_colour_nhsbsa <- function(palette = NA,
 #' @param reverse Boolean, to reverse the palette. Default is FALSE.
 #' @param ..., arguments to pass on
 #'
-#' @return
+#' @return Colour palette
 #'
 #' @examples
 #' ggplot2::ggplot(data = ggplot2::diamonds) +

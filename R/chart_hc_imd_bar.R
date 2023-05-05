@@ -178,7 +178,7 @@ chart_hc_imd_bar <- function(
                         style = list(color = "#000000")
                         )
     ) |>
-    theme_nhsbsa() |>
+    theme_nhsbsa_hc() |>
     highcharter::hc_yAxis(title = list(text = y_axis_lbl)) |>
     highcharter::hc_xAxis(
       min = 1,
@@ -193,7 +193,7 @@ chart_hc_imd_bar <- function(
       headerFormat = "",
       pointFormat = tooltip_text
     ) |>
-    highcharter::hc_legend(enabled = FALSE)
+    highcharter::hc_legend(enabled = TRUE)
 
 
   # specific formatting when highlighting core20

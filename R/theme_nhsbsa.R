@@ -85,28 +85,19 @@ theme_nhsbsa_gg <- function(plot, family = "sans") {
 }
 
 
-#' Theme an NHSBSA highcharter plot
+#' Custom NHSBSA highcharter theme
 #'
-#' @description
-#' Theme an NHSBSA highcharter plot. We would like to take several steps to
-#' brand a standard highcharter plot to an NHSBSA looking chart. These include:
+#' Based on the nhsbsaR highcharter theme, since it returns a list we can edit
+#' it to the specific theme for this shiny app.
 #'
-#' * Make the font of any text "TT Arial" or another `family` parameter.
-#' * Colour any text NHS Black
-#' * Colour background NHS White
-#' * Make the title and axis titles bold
-#' * Move the legend to the top and set the hover colour to NHS Mid Grey
-#' * Colour axis ticks and lines NHS Mid Grey
-#' * Remove yaxis gridlines (x axis has no gridlines by default)
-#' * Add credits (Note: Not working at the moment)
+#' @param palette Which colour palette to use from the `nhsbsaR` package.
+#' @param stack Stack option for highcharter.
 #'
-#' @param family, String font family to use (this must be installed and loaded).
-#'   Default value is "TT Arial"
-#'
-#' @return
+#' @return Theme data
 #' @export
-theme_nhsbsa_hc <- function(family = "TT Arial") {
-  highcharter::hc_theme(
+theme_nhsbsa_hc <- function(.hc, palette = NA, stack = "normal", family = "TT Arial") {
+
+  theme_nhsbsa <- highcharter::hc_theme(
     chart = list(
 
       # Make the font of any text "TT Arial" or another `family` parameter and
@@ -176,46 +167,28 @@ theme_nhsbsa_hc <- function(family = "TT Arial") {
       style = list(color = "#231f20")
     )
   )
-}
-
-
-#' Custom NHSBSA highcharter theme
-#'
-#' Based on the nhsbsaR highcharter theme, since it returns a list we can edit
-#' it to the specific theme for this shiny app.
-#'
-#' @param palette Which colour palette to use from the `nhsbsaR` package.
-#' @param stack Stack option for highcharter.
-#'
-#' @return Theme data
-#' @export
-theme_nhsbsa <- function(hc, palette = NA, stack = "normal") {
-
-  # Load theme from nhsbsaR package
-  theme_nhsbsa_hc <- nhsbsaR::theme_nhsbsa_hc(family = "Frutiger W01")
 
   # Add the plot options
-  theme_nhsbsa_hc$plotOptions <- list(
+  theme_nhsbsa$plotOptions <- list(
     series = list(stacking = stack, borderWidth = 0),
     bar = list(groupPadding = 0.1)
   )
 
   # Add the palettes (hack the highlight palette to have a lighter grey)
-  theme_nhsbsa_hc$colors <- nhsbsaR::palette_nhsbsa(palette = palette)
-  theme_nhsbsa_hc$colors[theme_nhsbsa_hc$colors == "#768692"] <- "#d1d5d6"
-    theme_nhsbsa_hc$colAxis <- list(
+  theme_nhsbsa$colors <- nhsbsaR::palette_nhsbsa(palette = palette)
+  theme_nhsbsa$colors[theme_nhsbsa$colors == "#768692"] <- "#d1d5d6"
+    theme_nhsbsa$colAxis <- list(
       min = 0,
       minColor = nhsbsaR::palette_nhsbsa(palette = "gradient")[1],
       maxColor = nhsbsaR::palette_nhsbsa(palette = "gradient")[2]
     )
 
-    # Style based on the NHS frontend toolkit
-    theme_nhsbsa_hc$xAxis$className <- "nhsuk-body-s"
-    theme_nhsbsa_hc$yAxis$className <- "nhsuk-body-s"
+    # Style based on the NHS frontend toolkit (to-do is this in use / required)
+    theme_nhsbsa$xAxis$className <- "nhsuk-body-s"
+    theme_nhsbsa$yAxis$className <- "nhsuk-body-s"
 
     # Add the theme to the chart and then remove the credits afterwards (currently
     # does not work to do this within the theme)
-    hc |>
-      highcharter::hc_add_theme(hc_thm = theme_nhsbsa_hc)
-    #  |>     highcharter::hc_colors(colors = nhsbsaR::palette_nhsbsa(palette = palette))
+    .hc |>
+      highcharter::hc_add_theme(hc_thm = theme_nhsbsa)
 }
