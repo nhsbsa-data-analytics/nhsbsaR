@@ -17,6 +17,9 @@ is 0.}
 
 \item{..., }{arguments to pass on}
 }
+\value{
+colour palette
+}
 \description{
 Scale colour an NHSBSA ggplot using the NHSBSA colour palette.
 }
