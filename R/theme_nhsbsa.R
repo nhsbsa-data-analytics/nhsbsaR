@@ -185,7 +185,7 @@ theme_nhsbsa_hc <- function(family = "TT Arial") {
 #' Theme an NHSBSA highcharter plot. We would like to take several steps to
 #' brand a standard highcharter plot to an NHSBSA looking chart. These include:
 #'
-#' * Make the font of any text "TT Arial" or another `family` parameter.
+#' * Make the font of any text "Frutiger W01" or another `family` parameter.
 #' * Colour any text NHS Black
 #' * Colour background NHS White
 #' * Make the title and axis titles bold
@@ -197,16 +197,16 @@ theme_nhsbsa_hc <- function(family = "TT Arial") {
 #' @param palette Which colour palette to use from the `nhsbsaR` package.
 #' @param stack Stack option for highcharter.
 #' @param family, String font family to use (this must be installed and loaded).
-#'   Default value is "TT Arial"
+#'   Default value is "Frutiger W01"
 #'
 #' @return highchart object with theme styling applied
 #' @export
-theme_nhsbsa_highchart <- function(.hc, palette = NA, stack = "normal", family = "TT Arial") {
+theme_nhsbsa_highchart <- function(.hc, palette = NA, stack = "normal", family = "Frutiger W01") {
 
   theme_nhsbsa <- highcharter::hc_theme(
     chart = list(
 
-      # Make the font of any text "TT Arial" or another `family` parameter and
+      # Make the font of any text "Frutiger W01" or another `family` parameter and
       # colour any text NHS Black
       style = list(fontFamily = family, color = "#231f20"),
 
