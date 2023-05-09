@@ -8,7 +8,7 @@ theme_nhsbsa_highchart(
   .hc,
   palette = NA,
   stack = "normal",
-  family = "TT Arial"
+  family = "Frutiger W01"
 )
 }
 \arguments{
@@ -19,7 +19,7 @@ theme_nhsbsa_highchart(
 \item{stack}{Stack option for highcharter.}
 
 \item{family, }{String font family to use (this must be installed and loaded).
-Default value is "TT Arial"}
+Default value is "Frutiger W01"}
 }
 \value{
 highchart object with theme styling applied
@@ -28,7 +28,7 @@ highchart object with theme styling applied
 Theme an NHSBSA highcharter plot. We would like to take several steps to
 brand a standard highcharter plot to an NHSBSA looking chart. These include:
 \itemize{
-\item Make the font of any text "TT Arial" or another \code{family} parameter.
+\item Make the font of any text "Frutiger W01" or another \code{family} parameter.
 \item Colour any text NHS Black
 \item Colour background NHS White
 \item Make the title and axis titles bold
