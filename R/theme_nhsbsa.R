@@ -103,7 +103,7 @@ theme_nhsbsa_gg <- function(plot, family = "sans") {
 #' @param family, String font family to use (this must be installed and loaded).
 #'   Default value is "TT Arial"
 #'
-#' @return
+#' @return hc_theme object
 #' @export
 theme_nhsbsa_hc <- function(family = "TT Arial") {
   highcharter::hc_theme(
@@ -176,4 +176,126 @@ theme_nhsbsa_hc <- function(family = "TT Arial") {
       style = list(color = "#231f20")
     )
   )
+}
+
+
+#' Theme an NHSBSA highcharter plot
+#'
+#' @description
+#' Theme an NHSBSA highcharter plot. We would like to take several steps to
+#' brand a standard highcharter plot to an NHSBSA looking chart. These include:
+#'
+#' * Make the font of any text "TT Arial" or another `family` parameter.
+#' * Colour any text NHS Black
+#' * Colour background NHS White
+#' * Make the title and axis titles bold
+#' * Move the legend to the top and set the hover colour to NHS Mid Grey
+#' * Colour axis ticks and lines NHS Mid Grey
+#' * Remove yaxis gridlines (x axis has no gridlines by default)
+#'
+#' @param .hc highchart object to be styled
+#' @param palette Which colour palette to use from the `nhsbsaR` package.
+#' @param stack Stack option for highcharter.
+#' @param family, String font family to use (this must be installed and loaded).
+#'   Default value is "TT Arial"
+#'
+#' @return highchart object with theme styling applied
+#' @export
+theme_nhsbsa_highchart <- function(.hc, palette = NA, stack = "normal", family = "TT Arial") {
+
+  theme_nhsbsa <- highcharter::hc_theme(
+    chart = list(
+
+      # Make the font of any text "TT Arial" or another `family` parameter and
+      # colour any text NHS Black
+      style = list(fontFamily = family, color = "#231f20"),
+
+      # Colour background NHS White
+      backgroundColor = "#FFFFFF"
+    ),
+
+    # Make the title bold
+    title = list(style = list(fontWeight = "bold", color = "#231f20")),
+
+    # Left align the subtitle
+    subtitle = list(
+      align = "left",
+      style = list(color = "#231f20")
+    ),
+
+    # Move the legend to the top and set the hover colour to NHS Mid Grey
+    # and the text to black
+    legend = list(
+      verticalAlign = "top",
+      itemHoverStyle = list(color = "#768692"),
+      title = list(style = list(color = "#231f20")),
+      style = list(color = "#231f20")
+    ),
+
+    xAxis = list(
+
+      # Bold xaxis title and colour black
+      title = list(style = list(fontWeight = "bold", color = "#231f20")),
+
+      # Colour xaxis labels black
+      labels = list(style = list(color = "#231f20")),
+
+      # Colour xaxis ticks and lines black
+      lineColor = "#231f20",
+      tickColor = "#231f20"
+    ),
+    yAxis = list(
+
+      # Bold yaxis title and colour black
+      title = list(style = list(fontWeight = "bold", color = "#231f20")),
+
+      # Colour yaxis labels black
+      labels = list(style = list(color = "#231f20")),
+
+      # Add yaxis line
+      lineWidth = 1,
+
+      # Colour yaxis ticks and lines black
+      lineColor = "#231f20",
+      tickColor = "#231f20",
+
+      # Remove yaxis gridlines
+      gridLineWidth = 0
+    ),
+
+    # Make the caption black
+    caption = list(
+      style = list(color = "#231f20")
+    ),
+
+    credits = list(
+      #enabled = TRUE
+      style = list(color = "#231f20")
+    )
+  )
+
+  # Add the plot options
+  theme_nhsbsa$plotOptions <- list(
+    series = list(stacking = stack, borderWidth = 0),
+    bar = list(groupPadding = 0.1)
+  )
+
+  # Add the palettes (hack the highlight palette to have a lighter grey)
+  theme_nhsbsa$colors <- palette_nhsbsa(palette = palette)
+  theme_nhsbsa$colors[theme_nhsbsa$colors == "#768692"] <- "#d1d5d6"
+    theme_nhsbsa$colAxis <- list(
+      min = 0,
+      minColor = palette_nhsbsa(palette = "gradient")[1],
+      maxColor = palette_nhsbsa(palette = "gradient")[2]
+    )
+
+    # Style based on the NHS frontend toolkit
+    # review required to confirm this is in use / required
+    theme_nhsbsa$xAxis$className <- "nhsuk-body-s"
+    theme_nhsbsa$yAxis$className <- "nhsuk-body-s"
+
+    # Add the theme to the chart
+    .hc |>
+      highcharter::hc_add_theme(hc_thm = theme_nhsbsa)
+
 }
