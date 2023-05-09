@@ -186,7 +186,7 @@ chart_hc_imd_bar <- function(
                         style = list(color = "#000000")
                         )
     ) |>
-    theme_nhsbsa_hc() |>
+    theme_nhsbsa_highchart() |>
     highcharter::hc_yAxis(title = list(text = y_axis_lbl)) |>
     highcharter::hc_xAxis(
       min = 1,
