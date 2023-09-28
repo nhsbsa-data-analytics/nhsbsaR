@@ -280,6 +280,11 @@ theme_nhsbsa_highchart <- function(.hc, palette = NA, stack = "normal", family =
     bar = list(groupPadding = 0.1)
   )
 
+  # Set the thousands seperator
+  hcoptslang <- getOption("highcharter.lang")
+  hcoptslang$thousandsSep <- ","
+  options(highcharter.lang = hcoptslang)
+
   # Add the palettes (hack the highlight palette to have a lighter grey)
   theme_nhsbsa$colors <- palette_nhsbsa(palette = palette)
   theme_nhsbsa$colors[theme_nhsbsa$colors == "#768692"] <- "#d1d5d6"
