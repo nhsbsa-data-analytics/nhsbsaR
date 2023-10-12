@@ -5,6 +5,7 @@
 #'
 #' @param palette, String type of colour palette. Default is NA, otherwise
 #'   should be one one `c("gender", "gradient", "highlight")`.
+#'   Custom colour can also be defined using  `NHSRtheme::get_nhs_colours()`
 #' @param reverse Boolean, to reverse the palette. Default is FALSE.
 #'
 #' @return Colour palette
@@ -14,35 +15,29 @@
 #' nhsbsaR::palette_nhsbsa(palette = "gender")
 #' nhsbsaR::palette_nhsbsa(palette = "gradient")
 #' nhsbsaR::palette_nhsbsa(palette = "highlight")
+#' #' nhsbsaR::palette_nhsbsa(palette = NHSRtheme::get_nhs_colours(c("Blue", "AquaGreen")))
 #' @export
 palette_nhsbsa <- function(palette = NA, reverse = FALSE) {
-
-  # Depending on the palette, get the colour names
-  if (!is.na(palette)) {
+  # Check if palette is one of the named palettes or a custom color palette
+  if (is.character(palette) & length(palette) == 1) { # Ensure palette is a single string
     if (palette == "gender") {
       names <- c("Pink", "LightBlue")
-    }
-
-    if (palette == "gradient") {
-      names <- c("White", "DarkBlue") # White is custom
-    }
-
-    if (palette == "highlight") {
+    } else if (palette == "gradient") {
+      names <- c("White", "DarkBlue")
+    } else if (palette == "highlight") {
       names <- c("MidGrey", "DarkBlue")
     }
-  } else {
-
-    # Base on the Wong palette (https://davidmathlogic.com/colorblind/)
+  } else if (is.character(palette) & length(palette) > 1) {
+    # If palette is not one of the named palettes, treat as custom colours
+    return(unname(palette))
+  } else if (is.na(palette)) {
+    # Base on the Wong palette
     names <- c(
-      "DarkBlue", # Instead of black
-      "Orange",
-      "LightBlue",
-      "AquaGreen",
-      "Yellow",
-      "BrightBlue", # Instead of NHS Blue
-      "Red",
-      "Pink"
+      "DarkBlue", "Orange", "LightBlue", "AquaGreen",
+      "Yellow", "BrightBlue", "Red", "Pink"
     )
+  } else {
+    stop("Invalid palette specified.")
   }
 
   # Reverse names if necessary
@@ -50,16 +45,13 @@ palette_nhsbsa <- function(palette = NA, reverse = FALSE) {
     names <- rev(names)
   }
 
-  # Get the NHS identity hex colour for each name (with a couple of custom
-  # colours added)
-  colours <- c(
-    NHSRtheme::get_nhs_colours(),
-    "White" = "#FFFFFF"
-  )[names]
+  # Get the NHS identity hex colour for each name (with custom colours added)
+  colours <- c(NHSRtheme::get_nhs_colours(), "White" = "#FFFFFF")[names]
 
   # Return the unnamed colours
   unname(colours)
 }
+
 
 
 #' Scale colour an NHSBSA ggplot
@@ -86,19 +78,16 @@ scale_colour_nhsbsa <- function(palette = NA,
                                 n_discrete = 0,
                                 reverse = FALSE,
                                 ...) {
-
   # Load the NHSBSA colour palette
   colours <- palette_nhsbsa(palette = palette, reverse = reverse)
 
   # Deal with non-gradient palette
   if (is.na(palette) | palette != "gradient") {
-
     # Return scale colour manual
     ggplot2::scale_colour_manual(values = colours, ...)
 
     # Deal with gradient palette (discrete)
   } else if (n_discrete > 0) {
-
     # Return manual colour manual gradient
     ggplot2::scale_colour_manual(
       values = grDevices::colorRampPalette(colors = colours, ...)(n_discrete)
@@ -106,7 +95,6 @@ scale_colour_nhsbsa <- function(palette = NA,
 
     # Deal with gradient palette (continuous)
   } else {
-
     # Return the colour gradient
     ggplot2::scale_colour_gradient(
       low = colours[[1]],
@@ -143,19 +131,16 @@ scale_fill_nhsbsa <- function(palette = NA,
                               n_discrete = 0,
                               reverse = FALSE,
                               ...) {
-
   # Load the NHSBSA colour palette
   colours <- palette_nhsbsa(palette = palette, reverse = reverse)
 
   # Deal with non-gradient palette
   if (is.na(palette) | palette != "gradient") {
-
     # Return scale fill manual
     ggplot2::scale_fill_manual(values = colours, ...)
 
     # Deal with gradient palette (discrete)
   } else if (n_discrete > 0) {
-
     # Return manual fill manual gradient
     ggplot2::scale_fill_manual(
       values = grDevices::colorRampPalette(colors = colours, ...)(n_discrete)
@@ -163,7 +148,6 @@ scale_fill_nhsbsa <- function(palette = NA,
 
     # Deal with gradient palette (continuous)
   } else {
-
     # Return the fill gradient
     ggplot2::scale_fill_gradient(
       low = colours[[1]],
