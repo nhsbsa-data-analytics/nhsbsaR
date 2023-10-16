@@ -19,11 +19,11 @@ testthat::test_that("gender palette is correct", {
 })
 
 testthat::test_that("gradient palette is correct", {
-  expect_equal(palette_nhsbsa("gender"), c("#FFFFFF", "#003087"))
+  expect_equal(palette_nhsbsa("gradient"), c("#FFFFFF", "#003087"))
 })
 
 testthat::test_that("highlight palette is correct", {
-  expect_equal(palette_nhsbsa("gender"), c("#768692", "#41B6E6"))
+  expect_equal(palette_nhsbsa("highlight"), c("#768692", "#41B6E6"))
 })
 
 testthat::test_that("palette of one NHS colour name", {
