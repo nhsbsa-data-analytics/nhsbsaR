@@ -96,3 +96,9 @@ testthat::test_that("no palette provided", {
     rev(unname(c(get_nhs_colours(), "White" = "#FFFFFF")))
   )
 })
+
+testthat::test_that("invalid vector throws error", {
+  palette = c("foo", "bar", "baz")
+
+  expect_error(palette_nhsbsa(palette))
+})
