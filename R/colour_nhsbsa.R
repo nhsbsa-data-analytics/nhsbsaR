@@ -1,9 +1,48 @@
+#' Check input colour is correct built-in R recognisable
+#' color names or HEX format
+#'
+#' @param x String type of colour palettes
+#'
+#' @return boolean
+#' @export
+#'
+#' @examples
+#' nhsbsaR::is_color(c("red", "#FFFFFF"))
+is_color <- function(x) {
+  x %in% grDevices::colors() |
+    grepl(
+      "^#(\\d|[a-f]){6,8}$",
+      x,
+      ignore.case = TRUE
+    )
+}
+
+
+
+#' Chck input color is pre-defiend NHS colours
+#'
+#' @param x String type of NHSRtheme colour palettes
+#'
+#' @return boolean
+#' @export
+#' nhsbsaR::is_nhs_color(c("DarkBlue","Blue","BrightBlue"))
+#'
+#' @examples
+is_nhs_color <- function(x) {
+  nhs_colours <- c(NHSRtheme::get_nhs_colours(), "White" = "#FFFFFF")
+  all(x %in% names(nhs_colours))
+}
+
+
+
+
+
 #' Generate NHSBSA colour palette
 #'
 #' Generate an accessible and appropriate colour palette for NHSBSA charts that
 #' is inline with the NHS identity. Currently supports up to 8 colours.
 #'
-#' @param palette, String type of colour palette. Default is NA, otherwise
+#' @param palette String type of colour palette. Default is NA, otherwise
 #'   should be one one `c("gender", "gradient", "highlight")`.
 #'   Custom colour can also be defined using  `NHSRtheme::get_nhs_colours()`
 #' @param reverse Boolean, to reverse the palette. Default is FALSE.
@@ -20,19 +59,26 @@
 palette_nhsbsa <- function(palette = NA, reverse = FALSE) {
   # Check if palette is one of the named palettes or a custom color palette
   if (is.character(palette) & length(palette) == 1) { # Ensure palette is a single string
-    if (palette == "gender") {
-      names <- c("Pink", "LightBlue")
-    } else if (palette == "gradient") {
-      names <- c("White", "DarkBlue")
-    } else if (palette == "highlight") {
-      names <- c("MidGrey", "DarkBlue")
-    }
+    color_names <- switch(palette,
+      gender = c("Pink", "LightBlue"),
+      gradient = c("White", "DarkBlue"),
+      highlight = c("MidGrey", "DarkBlue"),
+      ifelse(
+        is_color(palette) | is_nhs_color(palette),
+        return(unname(palette)),
+        stop("Invalid palette specified.")
+      )
+    )
   } else if (is.character(palette) & length(palette) > 1) {
     # If palette is not one of the named palettes, treat as custom colours
-    return(unname(palette))
+    ifelse(
+      all(is_color(palette) | all(is_nhs_color(palette))),
+      return(unname(palette)),
+      stop("Invalid palette specified.")
+    )
   } else if (is.na(palette)) {
     # Base on the Wong palette
-    names <- c(
+    color_names <- c(
       "DarkBlue", "Orange", "LightBlue", "AquaGreen",
       "Yellow", "BrightBlue", "Red", "Pink"
     )
@@ -42,16 +88,15 @@ palette_nhsbsa <- function(palette = NA, reverse = FALSE) {
 
   # Reverse names if necessary
   if (reverse) {
-    names <- rev(names)
+    color_names <- rev(color_names)
   }
 
-  # Get the NHS identity hex colour for each name (with custom colours added)
-  colours <- c(NHSRtheme::get_nhs_colours(), "White" = "#FFFFFF")[names]
-
-  # Return the unnamed colours
-  unname(colours)
+  if (is_nhs_color(color_names)) {
+    unname(c(NHSRtheme::get_nhs_colours(), "White" = "#FFFFFF")[color_names])
+  } else {
+    unname(nhs_colours)
+  }
 }
-
 
 
 #' Scale colour an NHSBSA ggplot
