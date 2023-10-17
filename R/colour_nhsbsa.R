@@ -7,7 +7,7 @@
 #' @export
 #'
 #' @examples
-#' nhsbsaR::is_color(c("red", "#FFFFFF"))
+#' is_color(c("red", "#FFFFFF"))
 is_color <- function(x) {
   x %in% grDevices::colors() |
     grepl(
@@ -19,18 +19,17 @@ is_color <- function(x) {
 
 
 
-#' Chck input color is pre-defiend NHS colours
+#' Check input color is pre-defiend NHS colours
 #'
 #' @param x String type of NHSRtheme colour palettes
 #'
 #' @return boolean
 #' @export
-#' nhsbsaR::is_nhs_color(c("DarkBlue","Blue","BrightBlue"))
+#' is_nhs_color(c("DarkBlue","Blue","BrightBlue"))
 #'
 #' @examples
 is_nhs_color <- function(x) {
-  nhs_colours <- c(NHSRtheme::get_nhs_colours(), "White" = "#FFFFFF")
-  all(x %in% names(nhs_colours))
+  x %in% names(NHSRtheme::get_nhs_colours())
 }
 
 
@@ -54,34 +53,39 @@ is_nhs_color <- function(x) {
 #' nhsbsaR::palette_nhsbsa(palette = "gender")
 #' nhsbsaR::palette_nhsbsa(palette = "gradient")
 #' nhsbsaR::palette_nhsbsa(palette = "highlight")
-#' #' nhsbsaR::palette_nhsbsa(palette = NHSRtheme::get_nhs_colours(c("Blue", "AquaGreen")))
+#' nhsbsaR::palette_nhsbsa(palette = NHSRtheme::get_nhs_colours(c("Blue", "AquaGreen")))
+#' nhsbsaR::palette_nhsbsa(palette = c("red","blue","green")
+#' nhsbsaR::palette_nhsbsa(palette = c("red","blue", "#4444ffcc"))
+#' nhsbsaR::palette_nhsbsa()
+#' nhsbsaR::palette_nhsbsa(reverse = TRUE)
+#'
 #' @export
-palette_nhsbsa <- function(palette = NA, reverse = FALSE) {
-  # Check if palette is one of the named palettes or a custom color palette
-  if (is.character(palette) & length(palette) == 1) { # Ensure palette is a single string
-    color_names <- switch(palette,
-      gender = c("Pink", "LightBlue"),
-      gradient = c("White", "DarkBlue"),
-      highlight = c("MidGrey", "DarkBlue"),
-      ifelse(
-        is_color(palette) | is_nhs_color(palette),
-        return(unname(palette)),
-        stop("Invalid palette specified.")
-      )
-    )
-  } else if (is.character(palette) & length(palette) > 1) {
-    # If palette is not one of the named palettes, treat as custom colours
-    ifelse(
-      all(is_color(palette) | all(is_nhs_color(palette))),
-      return(unname(palette)),
-      stop("Invalid palette specified.")
-    )
-  } else if (is.na(palette)) {
-    # Base on the Wong palette
-    color_names <- c(
+palette_nhsbsa <- function(palette = NA,
+                           reverse = FALSE) {
+
+  color_names <- c()
+
+
+  if (any(is.na(palette))) {
+    color_names <- NHSRtheme::get_nhs_colours(c(
       "DarkBlue", "Orange", "LightBlue", "AquaGreen",
-      "Yellow", "BrightBlue", "Red", "Pink"
-    )
+      "Yellow", "BrightBlue", "Red", "Pink"))
+
+  } else if (all(is_color(palette))) {
+    color_names <- palette
+
+  } else if (all(is_nhs_color(palette))) {
+    color_names <- NHSRtheme::get_nhs_colours(palette)
+
+  } else if (palette == "gender") {
+    color_names <- NHSRtheme::get_nhs_colours(c("Pink","LightBlue"))
+
+  } else if (palette == "gradient") {
+    color_names <- c("#FFFFFF", NHSRtheme::get_nhs_colours("DarkBlue"))
+
+  } else if (palette == "highlight") {
+    color_names <- NHSRtheme::get_nhs_colours(c("MidGrey", "DarkBlue"))
+
   } else {
     stop("Invalid palette specified.")
   }
@@ -91,12 +95,9 @@ palette_nhsbsa <- function(palette = NA, reverse = FALSE) {
     color_names <- rev(color_names)
   }
 
-  if (is_nhs_color(color_names)) {
-    unname(c(NHSRtheme::get_nhs_colours(), "White" = "#FFFFFF")[color_names])
-  } else {
-    unname(nhs_colours)
-  }
+  return(unname(color_names))
 }
+
 
 
 #' Scale colour an NHSBSA ggplot
