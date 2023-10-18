@@ -13,10 +13,10 @@ testthat::test_that("is_nhs_color detects NHS colors", {
 })
 
 #
-# # palette test; either NA or three options
-# testthat::test_that("invalid palette name", {
-#   expect_error(palette_nhsbsa("wrong_palette"))
-# })
+# palette test; either NA or three options
+testthat::test_that("invalid palette name", {
+  expect_error(palette_nhsbsa("wrong_palette"))
+})
 
 
 # Palette -----------------------------------------------------------------
@@ -53,6 +53,11 @@ testthat::test_that("one hex code", {
 testthat::test_that("one hex code with alpha", {
   expect_equal(palette_nhsbsa("#bada55c8"), "#bada55c8")
 })
+
+testthat::test_that("NHSRtheme colour manually enter",{
+  expect_equal(palette_nhsbsa(c("Blue","AquaGreen")), c("#005EB8","#00A499"))
+})
+
 
 testthat::test_that("invalid atomic vector throws error", {
   expect_error(palette_nhsbsa("rod"))

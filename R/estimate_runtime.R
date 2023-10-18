@@ -8,8 +8,8 @@
 #'
 #' @return Annotated `ggplot2` graph showing estimated runtime over the full dataset's size.
 #'
-#' @examples
-#' library(data.table)
+#' @examples \dontrun{
+#' #' library(data.table)
 #' library(randomForest)
 #'
 #' n = 1e6
@@ -29,6 +29,8 @@
 #'   subset_sizes = c(2500,5000,10000,15000,25000,50000),
 #'   full_size = n
 #' )
+#' }
+
 #'
 #' @export
 estimate_runtime <- function(code, subset_sizes, full_size) {

@@ -7,8 +7,9 @@
 palette_nhsbsa(palette = NA, reverse = FALSE)
 }
 \arguments{
-\item{palette, }{String type of colour palette. Default is NA, otherwise
-should be one one \code{c("gender", "gradient", "highlight")}.}
+\item{palette}{String type of colour palette. Default is NA, otherwise
+should be one one \code{c("gender", "gradient", "highlight")}.
+Custom colour can also be defined using  \code{NHSRtheme::get_nhs_colours()}}
 
 \item{reverse}{Boolean, to reverse the palette. Default is FALSE.}
 }
@@ -19,9 +20,18 @@ Colour palette
 Generate an accessible and appropriate colour palette for NHSBSA charts that
 is inline with the NHS identity. Currently supports up to 8 colours.
 }
+\details{
+Custom colour can also be defined using a vector of NHS Identity colours with
+NHSRtheme::get_nhs_colours() or any valid R color, e.g. hex code or named color.
+}
 \examples{
 nhsbsaR::palette_nhsbsa()
 nhsbsaR::palette_nhsbsa(palette = "gender")
 nhsbsaR::palette_nhsbsa(palette = "gradient")
 nhsbsaR::palette_nhsbsa(palette = "highlight")
+nhsbsaR::palette_nhsbsa(palette = NHSRtheme::get_nhs_colours(c("Blue", "AquaGreen")))
+nhsbsaR::palette_nhsbsa(palette = c("red","blue","green"))
+nhsbsaR::palette_nhsbsa(palette = c("red","blue", "#4444ffcc"))
+nhsbsaR::palette_nhsbsa(reverse = TRUE)
+
 }

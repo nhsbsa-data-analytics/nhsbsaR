@@ -9,8 +9,9 @@
 #' @return Returns a local data frame.
 #'
 #' @examples
+#' \dontrun{
 #' df <- collect_with_parallelism(df_lazy, 12)
-#'
+#'}
 #' @export
 collect_with_parallelism = function(lazy_tbl, n){
 

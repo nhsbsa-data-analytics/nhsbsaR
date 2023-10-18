@@ -19,6 +19,9 @@ oracle_create_table(df, schema_name = NULL, table_name, overwrite = TRUE)
 Pipe into the end of a \code{{dbplyr}} to create a table in your database schema.
 }
 \examples{
+\dontrun{
 dplyr::tbl(src = con, from = "DUAL") \%>\%
   oracle_create_table("<schema_name>", "<table_name>")
+}
+
 }

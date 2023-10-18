@@ -20,7 +20,8 @@ Annotated \code{ggplot2} graph showing estimated runtime over the full dataset's
 Estimate runtime of fitting a computationally intensive model to a big dataset prior to the run itself, which, in some cases, may be measured in hours or days. The runtime is estimated by extrapolation from a best-fitting model (power, exponential or linear) fitted to a sample of runtimes in a small range.
 }
 \examples{
-library(data.table)
+\dontrun{
+#' library(data.table)
 library(randomForest)
 
 n = 1e6
@@ -40,5 +41,6 @@ estimate_runtime(
   subset_sizes = c(2500,5000,10000,15000,25000,50000),
   full_size = n
 )
+}
 
 }
