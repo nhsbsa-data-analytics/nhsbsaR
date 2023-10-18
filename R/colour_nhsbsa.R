@@ -102,8 +102,6 @@ palette_nhsbsa <- function(palette = NA,
 
 
 
-#' Scale colour an NHSBSA ggplot
-#'
 #' Scale colour an NHSBSA ggplot using the NHSBSA colour palette.
 #'
 #' @param palette, String type of colour palette. Default is NA, otherwise
@@ -154,8 +152,6 @@ scale_colour_nhsbsa <- function(palette = NA,
 }
 
 
-#' Scale fill an NHSBSA ggplot
-#'
 #' Scale fill an NHSBSA ggplot using the NHSBSA colour palette.
 #'
 #' @param palette, String type of colour palette. Default is NA, otherwise
