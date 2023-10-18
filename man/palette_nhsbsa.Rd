@@ -25,13 +25,13 @@ Custom colour can also be defined using a vector of NHS Identity colours with
 NHSRtheme::get_nhs_colours() or any valid R color, e.g. hex code or named color.
 }
 \examples{
-nhsbsaR::palette_nhsbsa()
-nhsbsaR::palette_nhsbsa(palette = "gender")
-nhsbsaR::palette_nhsbsa(palette = "gradient")
-nhsbsaR::palette_nhsbsa(palette = "highlight")
-nhsbsaR::palette_nhsbsa(palette = NHSRtheme::get_nhs_colours(c("Blue", "AquaGreen")))
-nhsbsaR::palette_nhsbsa(palette = c("red","blue","green"))
-nhsbsaR::palette_nhsbsa(palette = c("red","blue", "#4444ffcc"))
-nhsbsaR::palette_nhsbsa(reverse = TRUE)
+palette_nhsbsa()
+palette_nhsbsa(palette = "gender")
+palette_nhsbsa(palette = "gradient")
+palette_nhsbsa(palette = "highlight")
+palette_nhsbsa(palette = NHSRtheme::get_nhs_colours(c("Blue", "AquaGreen")))
+palette_nhsbsa(palette = c("red","blue","green"))
+palette_nhsbsa(palette = c("red","blue", "#4444ffcc"))
+palette_nhsbsa(reverse = TRUE)
 
 }
