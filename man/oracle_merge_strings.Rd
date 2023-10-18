@@ -26,10 +26,12 @@ The result is a 'master' address string that contains all parts of each address
 Requires \code{nhsbsaR::oracle_unnest_tokens()}.
 }
 \examples{
-table_db \%>\%
+\dontrun {
+#' table_db \%>\%
   nhsbsaR::oracle_merge_strings(
     first_col = "ADDRESS_ONE",
     second_col = "ADDRESS_TWO",
     merge_col = "ADDRESS_MERGED"
   )
+  }
 }

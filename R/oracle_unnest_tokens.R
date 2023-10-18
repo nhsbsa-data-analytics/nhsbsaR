@@ -12,8 +12,10 @@
 #' @param drop Whether original input column should get dropped
 #' @param regex regex to tokenise by
 #'
-#' @examples
+#' @examples \dontrun {
 #' table_db %>% nhsbsaR::oracle_unnest_tokens(col = "DUMMY")
+#' }
+#'
 #' @export
 oracle_unnest_tokens <- function(df, col, drop = TRUE, pattern = "[:space:]") {
 

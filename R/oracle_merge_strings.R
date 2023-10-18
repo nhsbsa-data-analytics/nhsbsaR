@@ -10,13 +10,15 @@
 #'
 #' @details Requires `nhsbsaR::oracle_unnest_tokens()`.
 #'
-#' @examples
-#' table_db %>%
+#' @examples \dontrun {
+#' #' table_db %>%
 #'   nhsbsaR::oracle_merge_strings(
 #'     first_col = "ADDRESS_ONE",
 #'     second_col = "ADDRESS_TWO",
 #'     merge_col = "ADDRESS_MERGED"
 #'   )
+#'   }
+
 #' @returns original df with additional merged column added
 #'
 #' @export

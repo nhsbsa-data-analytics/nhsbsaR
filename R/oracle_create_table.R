@@ -7,9 +7,11 @@
 #' @param table_name Name of the table
 #' @param overwrite Whether to overwrite an existing table
 #'
-#' @examples
+#' @examples \dontrun{
 #' dplyr::tbl(src = con, from = "DUAL") %>%
 #'   oracle_create_table("<schema_name>", "<table_name>")
+#' }
+#'
 #' @export
 oracle_create_table <- function(df, schema_name = NULL, table_name, overwrite = TRUE) {
 

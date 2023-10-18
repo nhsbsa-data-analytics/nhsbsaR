@@ -18,6 +18,7 @@ Returns a local data frame.
 Execute and collect dbplyr lazy table with specified degree of parallelism. Adds a parallel hint to the first SELECT statement only: \verb{SELECT /* +PARALLEL(N) */...} The hint is usually taken into account, but as it is only a hint, the database optimizer ultimately makes a final decision as to which degree of parallelism to use, if any. This is based on things like the query itself and the amount of concurrent use. To override the optimizer and force a specific degree, the session needs to be altered: \verb{alter session enable parallel query; alter session force parallel query parallel n;} (not supported here).
 }
 \examples{
+\dontrun{
 df <- collect_with_parallelism(df_lazy, 12)
-
+}
 }
