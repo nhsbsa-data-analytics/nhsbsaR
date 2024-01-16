@@ -10,7 +10,7 @@
 #'
 #' @details Requires `nhsbsaR::oracle_unnest_tokens()`.
 #'
-#' @examples \dontrun {
+#' @examples \dontrun{
 #' #' table_db %>%
 #'   nhsbsaR::oracle_merge_strings(
 #'     first_col = "ADDRESS_ONE",
