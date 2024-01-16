@@ -12,7 +12,7 @@
 #' @param drop Whether original input column should get dropped
 #' @param regex regex to tokenise by
 #'
-#' @examples \dontrun {
+#' @examples \dontrun{
 #' table_db %>% nhsbsaR::oracle_unnest_tokens(col = "DUMMY")
 #' }
 #'
