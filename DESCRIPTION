@@ -1,6 +1,6 @@
 Package: nhsbsaR
 Title: NHSBSA R package
-Version: 0.0.0.9301
+Version: 0.0.0.9302
 Authors@R: 
     c(person(given = "Adam",
 			       family = "Ivison",

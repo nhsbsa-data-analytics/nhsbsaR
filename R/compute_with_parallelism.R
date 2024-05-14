@@ -1,13 +1,14 @@
-# Function to create table from query with specified degree of parallelism
+#' Function to create table from lazy query with specified degree of parallelism
 #'
-#'#' Compute (a-la dbplyr) a lazy table with specified degree of parallelism. Adds a parallel hint to all SELECT statements: `SELECT /* +PARALLEL(N) */...` The hint is usually taken into account, but as it is only a hint, the database optimizer ultimately makes a final decision as to which degree of parallelism to use, if any. This is based on things like the query itself and the amount of concurrent use.
-#'
-#' If hints are already present in any queries, e.g. by including them manually in parsing SQL using `dbplyr::sql()`, this function will overwrite them.
+#' Compute (a-la dbplyr) a lazy query with specified degree of parallelism. Adds a parallel hint to all SELECT statements: `SELECT /* +PARALLEL(N) */...` The hint is usually taken into account, but as it is only a hint, the database optimizer ultimately makes a final decision as to which degree of parallelism to use, if any. This is based on things like the query itself and the amount of concurrent use.\cr
+#' \cr
+#' If hints are already present in any sub-queries, e.g. included  manually using `dbplyr::sql()`, this function will overwrite them.
 #'
 #' @param lazy_tbl name of the dbplyr lazy table
 #' @param create_table_name name of user created table in SQL database
 #' @param n the degree of parallelism to enforce
-#' @param overwrite if `TRUE`, function will check if table exists, and if it does, will drop it; if `FALSE` will throw an error only if the table already exists.
+#' @param overwrite if `TRUE`, function will check if table exists, and if it does, will drop it; if `FALSE`, will intentionally throw an error if the table already exists.
+#' @param materialize if `TRUE`, will additionally add `MATERIALIZE` hints
 #'
 #' @examples
 #' \dontrun{

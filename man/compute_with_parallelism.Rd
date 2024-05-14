@@ -2,7 +2,7 @@
 % Please edit documentation in R/compute_with_parallelism.R
 \name{compute_with_parallelism}
 \alias{compute_with_parallelism}
-\title{#' Compute (a-la dbplyr) a lazy table with specified degree of parallelism. Adds a parallel hint to all SELECT statements: \verb{SELECT /* +PARALLEL(N) */...} The hint is usually taken into account, but as it is only a hint, the database optimizer ultimately makes a final decision as to which degree of parallelism to use, if any. This is based on things like the query itself and the amount of concurrent use.}
+\title{Function to create table from lazy query with specified degree of parallelism}
 \usage{
 compute_with_parallelism(
   lazy_tbl,
@@ -19,10 +19,14 @@ compute_with_parallelism(
 
 \item{n}{the degree of parallelism to enforce}
 
-\item{overwrite}{if \code{TRUE}, function will check if table exists, and if it does, will drop it; if \code{FALSE} will throw an error only if the table already exists.}
+\item{overwrite}{if \code{TRUE}, function will check if table exists, and if it does, will drop it; if \code{FALSE}, will intentionally throw an error if the table already exists.}
+
+\item{materialize}{if \code{TRUE}, will additionally add \code{MATERIALIZE} hints}
 }
 \description{
-If hints are already present in any queries, e.g. by including them manually in parsing SQL using \code{dbplyr::sql()}, this function will overwrite them.
+Compute (a-la dbplyr) a lazy query with specified degree of parallelism. Adds a parallel hint to all SELECT statements: \verb{SELECT /* +PARALLEL(N) */...} The hint is usually taken into account, but as it is only a hint, the database optimizer ultimately makes a final decision as to which degree of parallelism to use, if any. This is based on things like the query itself and the amount of concurrent use.\cr
+\cr
+If hints are already present in any sub-queries, e.g. included  manually using \code{dbplyr::sql()}, this function will overwrite them.
 }
 \examples{
 \dontrun{
