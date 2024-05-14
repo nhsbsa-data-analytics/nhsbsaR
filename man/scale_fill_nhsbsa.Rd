@@ -2,7 +2,7 @@
 % Please edit documentation in R/colour_nhsbsa.R
 \name{scale_fill_nhsbsa}
 \alias{scale_fill_nhsbsa}
-\title{Scale fill an NHSBSA ggplot}
+\title{Scale fill an NHSBSA ggplot using the NHSBSA colour palette.}
 \usage{
 scale_fill_nhsbsa(palette = NA, n_discrete = 0, reverse = FALSE, ...)
 }

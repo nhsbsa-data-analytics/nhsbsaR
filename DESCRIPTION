@@ -1,6 +1,6 @@
 Package: nhsbsaR
 Title: NHSBSA R package
-Version: 0.0.0.93
+Version: 0.0.0.9301
 Authors@R: 
     c(person(given = "Adam",
 			       family = "Ivison",
@@ -22,7 +22,7 @@ BugReports: https://github.com/nhsbsa-data-analytics/nhsbsaR/issues
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 Depends: 
     R (>= 4.3.0),
 	  data.table

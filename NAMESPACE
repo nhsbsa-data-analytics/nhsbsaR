@@ -2,6 +2,7 @@
 
 export(chart_hc_imd_bar)
 export(collect_with_parallelism)
+export(compute_with_parallelism)
 export(con_nhsbsa)
 export(estimate_runtime)
 export(is_color)
