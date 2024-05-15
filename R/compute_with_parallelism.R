@@ -21,7 +21,7 @@ compute_with_parallelism = function(lazy_tbl, create_table_name, n, overwrite = 
   db_connection <- lazy_tbl$src$con
 
   # If overwrite is TRUE, check if the table exists, and if it does, drop it
-  if (overwrite == TRUE) {
+  if (overwrite) {
 
     if (DBI::dbExistsTable(
           conn = db_connection,
@@ -35,10 +35,10 @@ compute_with_parallelism = function(lazy_tbl, create_table_name, n, overwrite = 
     }
   }
 
-  if (materialize == T) {
-    string_insert = paste0("SELECT /*+ PARALLEL(", n, ") */")
-  } else {
+  if (materialize) {
     string_insert = paste0("SELECT /*+ MATERIALIZE PARALLEL(", n, ") */")
+  } else {
+    string_insert = paste0("SELECT /*+ PARALLEL(", n, ") */")
   }
 
   # Specify parallelism after each select
