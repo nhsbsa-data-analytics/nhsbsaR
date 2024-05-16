@@ -9,6 +9,7 @@ compute_with_parallelism(
   create_table_name,
   n,
   overwrite = F,
+  compress = "high",
   materialize = F
 )
 }
@@ -20,6 +21,8 @@ compute_with_parallelism(
 \item{n}{the degree of parallelism to enforce}
 
 \item{overwrite}{if \code{TRUE}, function will check if table exists, and if it does, will drop it; if \code{FALSE}, will intentionally throw an error if the table already exists.}
+
+\item{compress}{Compression setting for the table: \code{high} = \verb{compress for query high}, \code{low} = \verb{compress for query low}, \code{no} = \code{nocompress} (forced non-compression), \code{NA},\code{NULL} or any other value = compression option not passed to the database, determined by database defaults.}
 
 \item{materialize}{if \code{TRUE}, will additionally add \code{MATERIALIZE} hints}
 }

@@ -8,6 +8,7 @@
 #' @param create_table_name name of user created table in SQL database
 #' @param n the degree of parallelism to enforce
 #' @param overwrite if `TRUE`, function will check if table exists, and if it does, will drop it; if `FALSE`, will intentionally throw an error if the table already exists.
+#' @param compress Compression setting for the table: `high` = `compress for query high`, `low` = `compress for query low`, `no` = `nocompress` (forced non-compression), `NA`,`NULL` or any other value = compression option not passed to the database, determined by database defaults.
 #' @param materialize if `TRUE`, will additionally add `MATERIALIZE` hints
 #'
 #' @examples
@@ -15,7 +16,12 @@
 #' compute_with_parallelism(table_db, "INT646_TABLE_DB", 32)
 #' }
 #' @export
-compute_with_parallelism = function(lazy_tbl, create_table_name, n, overwrite = F, materialize = F) {
+compute_with_parallelism = function(lazy_tbl,
+                                    create_table_name,
+                                    n,
+                                    overwrite = F,
+                                    compress = "high",
+                                    materialize = F) {
 
   # Pull the DB connection
   db_connection <- lazy_tbl$src$con
@@ -41,6 +47,11 @@ compute_with_parallelism = function(lazy_tbl, create_table_name, n, overwrite = 
     string_insert = paste0("SELECT /*+ PARALLEL(", n, ") */")
   }
 
+  if (compress == "high") { compression_string = "COMPRESS FOR QUERY HIGH " } else
+  if (compress == "low")  { compression_string = "COMPRESS FOR QUERY LOW " } else
+  if (compress == "no")   { compression_string = "NOCOMPRESS " } else
+                          { compression_string = "" }
+
   # Specify parallelism after each select
   new_query <- gsub(
     "SELECT(\\s+/\\*.*\\*/)?",       # Replaces existing hints if they are present
@@ -52,7 +63,9 @@ compute_with_parallelism = function(lazy_tbl, create_table_name, n, overwrite = 
   new_query <- paste0(
     "CREATE TABLE ",
     create_table_name,
-    " NOLOGGING COMPRESS FOR QUERY HIGH AS ",
+    " NOLOGGING ",
+    compression_string,
+    "AS ",
     new_query
   )
 
