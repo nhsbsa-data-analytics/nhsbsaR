@@ -28,18 +28,8 @@ compute_with_parallelism = function(lazy_tbl,
 
   # If overwrite is TRUE, check if the table exists, and if it does, drop it
   if (overwrite) {
-
-    if (DBI::dbExistsTable(
-          conn = db_connection,
-          name = DBI::Id(schema = toupper(db_connection@info$username), table = create_table_name)
-      ) == T
-     ) {
-      DBI::dbRemoveTable(
-        conn = db_connection,
-        name = DBI::Id(schema = toupper(db_connection@info$username), table = create_table_name)
-      )
+    drop_table(create_table_name, db_connection, silent = T)
     }
-  }
 
   if (materialize) {
     string_insert = paste0("SELECT /*+ MATERIALIZE PARALLEL(", n, ") */")
