@@ -25,7 +25,7 @@ Inspiration:
 https://stackoverflow.com/questions/59537458/how-to-pipe-sql-into-rs-dplyr
 }
 \examples{
-\dontrun {
+\dontrun{
 table_db \%>\% nhsbsaR::oracle_unnest_tokens(col = "DUMMY")
 }
 
