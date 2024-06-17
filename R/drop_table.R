@@ -19,7 +19,6 @@ drop_table <- function(table_name, conn = con, purge = TRUE, silent = F) {
 
   if(DBI::dbExistsTable(
       conn,
-      #name = DBI::Id(schema = "MIGAR", table = toupper(table_name))
       name = DBI::Id(schema = toupper(conn@info$username), table = toupper(table_name))
       )) {
 
