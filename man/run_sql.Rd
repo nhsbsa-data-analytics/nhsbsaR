@@ -24,6 +24,6 @@ con <- nhsbsaR::con_nhsbsa(database = "DALP")
 run_sql("INTXXX_BASE_TABLE.sql")
 
 # E.g. a select statement
-df <- run_sql("INTXXX_SUMMARY_DATA.sql")
+df <- run_sql("INTXXX_SUMMARY_DATA.sql", return_output = T)
 }
 }

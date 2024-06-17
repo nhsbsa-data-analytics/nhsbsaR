@@ -14,7 +14,7 @@
 #' run_sql("INTXXX_BASE_TABLE.sql")
 #'
 #' # E.g. a select statement
-#' df <- run_sql("INTXXX_SUMMARY_DATA.sql")
+#' df <- run_sql("INTXXX_SUMMARY_DATA.sql", return_output = T)
 #' }
 #' @export
 run_sql = function(script, conn = con, return_output = F) {
