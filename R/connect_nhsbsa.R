@@ -66,7 +66,7 @@ con_nhsbsa <- function(
   dsn       = "FBS_8192k",
   driver    = "Oracle in OraClient19Home1",
   database,
-  username  = Sys.getenv(paste0("DB_", database, "_USERNAME")),
+  username  = toupper(Sys.getenv(paste0("DB_", database, "_USERNAME"))),
   password  = Sys.getenv(paste0("DB_", database, "_PASSWORD"))
 ) {
 
@@ -150,7 +150,7 @@ pool_nhsbsa <- function(
   dsn       = "FBS_8192k",
   driver    = "Oracle in OraClient19Home1",
   database,
-  username  = Sys.getenv(paste0("DB_", database, "_USERNAME")),
+  username  = toupper(Sys.getenv(paste0("DB_", database, "_USERNAME"))),
   password  = Sys.getenv(paste0("DB_", database, "_PASSWORD"))
 ) {
 
