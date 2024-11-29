@@ -21,7 +21,7 @@ Estimate runtime of fitting a computationally intensive model to a big dataset p
 }
 \examples{
 \dontrun{
-#' library(data.table)
+library(data.table)
 library(randomForest)
 
 n = 1e6
