@@ -72,7 +72,7 @@ estimate_runtime <- function(code, subset_sizes, full_size) {
   r2 <- summary(m2)$r.squared
   r3 <- summary(m3)$r.squared
 
-  timings <- data.table(n = seq(from = 1, to = full_size, by = round(full_size/100)))
+  timings <- data.table::data.table(n = seq(from = 1, to = full_size, by = round(full_size/100)))
 
   if (r1 >= r2 & r1 >= r3) {
 
