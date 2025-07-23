@@ -5,17 +5,22 @@
 \title{Connect to a NHSBSA Fabric Lakehouse}
 \usage{
 con_nhsbsa_fabric(
+  sql_analytics_endpoint,
+  lakehouse_name,
   driver = "ODBC Driver 18 for SQL Server",
-  database,
   username = Sys.getenv("FABRIC_USERNAME"),
   password = Sys.getenv("FABRIC_PASSWORD")
 )
 }
 \arguments{
+\item{sql_analytics_endpoint}{String, connection string to the Lakehouse SQL
+endpoint.}
+
+\item{lakehouse_name}{String, the name of the Fabric Lakehouse we are trying
+to connect to.}
+
 \item{driver}{String, ODBC driver to connect to the DB. Default is correct
 but an argument is provided in case this ever changes.}
-
-\item{database}{String, connection string to the Lakehouse SQL endpoint.}
 
 \item{username}{String, username for DB. Default value is
 \code{Sys.getenv("FABRIC_USERNAME")} and we recommend setting
@@ -36,26 +41,30 @@ request with IT.
 }
 \examples{
 # Initialise connection assuming you have a `.Renviron` file with
-# DB_DALP_USERNAME and DB_DALP_PASSWORD set (recommended)
+# DB_DALP_USERNAME and DB_DALP_PASSWORD set (recommended).
+
 \dontrun{
-  con <- nhsbsaR::con_nhsbsa_fabric(database = "Example/Lakehouse/Connection")
+  con <- nhsbsaR::con_nhsbsa_fabric(
+     sql_analytics_endpoint = "Example/Lakehouse/Connection",
+     lakehouse_name = 'lakehouse-name'
+  )
+  result <- DBI::dbGetQuery(conn, "SELECT * FROM table")
 }
 
 # Initialise connection without `.Renviron` file (Note: Never store passwords
 # in your code)
 \dontrun{
   con <- nhsbsaR::con_nhsbsa_fabric(
-    database = "Example/Lakehouse/Connection",
+    sql_analytics_endpoint = "Example/Lakehouse/Connection",
+    lakehouse_name = 'lakehouse-name',
     username = rstudioapi::showPrompt(),
     password = rstudioapi::askForPassword()
   )
 }
 
-
 # Remember to disconnect your session
 \dontrun{
   DBI::dbDisconnect(con)
 }
-
 
 }
