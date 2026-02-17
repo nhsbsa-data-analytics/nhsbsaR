@@ -29,7 +29,8 @@
 #'      sql_analytics_endpoint = "Example/Lakehouse/Connection",
 #'      lakehouse_name = 'lakehouse-name'
 #'   )
-#'   result <- DBI::dbGetQuery(conn, "SELECT * FROM table")
+#'   result <- DBI::dbGetQuery(conn, "SELECT * FROM table")                     # for materialised table/in-memory dataframe
+#'   result <- dplyr::tbl(con, dbplyr::in_schema("schema_name", "table_name"))  # for lazy table
 #' }
 #'
 #' # Initialise connection without `.Renviron` file (Note: Never store passwords
