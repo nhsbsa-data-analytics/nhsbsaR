@@ -2,7 +2,7 @@
 % Please edit documentation in R/connect_nhsbsa_fabric.R
 \name{con_nhsbsa_fabric}
 \alias{con_nhsbsa_fabric}
-\title{Connect to a NHSBSA Fabric Lakehouse}
+\title{Connect to a NHSBSA Fabric Lakehouse via a SQL endpoint}
 \usage{
 con_nhsbsa_fabric(
   sql_analytics_endpoint,
@@ -48,7 +48,8 @@ request with IT.
      sql_analytics_endpoint = "Example/Lakehouse/Connection",
      lakehouse_name = 'lakehouse-name'
   )
-  result <- DBI::dbGetQuery(conn, "SELECT * FROM table")
+  result <- DBI::dbGetQuery(conn, "SELECT * FROM table")                     # for materialised table/in-memory dataframe
+  result <- dplyr::tbl(con, dbplyr::in_schema("schema_name", "table_name"))  # for lazy table
 }
 
 # Initialise connection without `.Renviron` file (Note: Never store passwords
