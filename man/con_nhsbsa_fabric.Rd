@@ -2,7 +2,7 @@
 % Please edit documentation in R/connect_nhsbsa_fabric.R
 \name{con_nhsbsa_fabric}
 \alias{con_nhsbsa_fabric}
-\title{Connect to a NHSBSA Fabric Lakehouse}
+\title{Connect to a NHSBSA Fabric Lakehouse via a SQL endpoint}
 \usage{
 con_nhsbsa_fabric(
   sql_analytics_endpoint,

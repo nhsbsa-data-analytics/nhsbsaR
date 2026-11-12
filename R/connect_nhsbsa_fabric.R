@@ -1,4 +1,4 @@
-#' Connect to a NHSBSA Fabric Lakehouse
+#' Connect to a NHSBSA Fabric Lakehouse via a SQL endpoint
 #'
 #' Connect to a NHSBSA Fabric Lakehouse. Hopefully you will already have
 #' the ODBC driver installed, but if not you may have to raise a service
