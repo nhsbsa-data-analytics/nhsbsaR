@@ -1,6 +1,6 @@
 Package: nhsbsaR
 Title: NHSBSA R package
-Version: 0.0.0.9400
+Version: 0.0.0.9401
 Authors@R: person("NHS Business Services Authority", email = "DataLab@nhsbsa.nhs.uk", role = c("aut", "cre"))
 Description: Helper package for common NHSBSA R actions.
 License: Apache License (>= 2) + file LICENSE
@@ -13,7 +13,7 @@ Depends:
     R (>= 4.5.0)
 Imports:
     AzureAuth,
-	  data.table,
+    data.table,
     DBI,
     dplyr,
     dbplyr,
@@ -21,11 +21,13 @@ Imports:
     ggplot2,
     glue,
     highcharter,
+    jsonlite,
     NHSRtheme,
     odbc,
     pool,
     readr,
-    stringr
+    stringr,
+    tibble
 Remotes: 
     nhs-r-community/NHSRtheme
 Suggests: 
