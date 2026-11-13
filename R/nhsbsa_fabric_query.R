@@ -18,6 +18,18 @@
 #' You need to have the `FABRICQUERYR_TENANT_ID` environment variable set in `.Renviron`. This is an identifier of NHSBSA's corporate account with Fabric. Can be obtained from https://app.fabric.microsoft.com -> Profile icon -> Exclamation mark near Tenant Name.
 #'
 #' @param livy_url Character. Lakehouse-specific endpoint. Obtained by opening a lakehouse in web UI -> settings cog on the left -> Livy endpoint -> Session job connection string
+#' @param conf A uniquely named list of single, non-missing strings, providing configuration options for a Spark session. Some commonly adjusted options include:
+#' ```
+#' list(
+#'   # Number of parallel partitions and tasks created when redistributing data across the cluster
+#'   # Default is 200, for large aggregations/joins could be raised to 500-2000
+#'   "spark.sql.shuffle.partitions" = "500",
+#'   # Byte-size limit below which smaller tables are automatically broadcast-joined
+#'   # Default is 26214400 bytes (25 MB), raising it can improve performance in some queries
+#'   # Can be passed in more convenient units, e.g. "100MB" or set to "-1" to disable if it becomes a problem
+#'   "spark.sql.autoBroadcastJoinThreshold" = "-1"
+#' )
+#' ```
 #' @param kind Character. Only `"sql"` and `"pyspark"` are currently supported. In principle, `"sparkr"` and `"scala"` could be supported, but support is turned off, as it requires testing.
 #' @param code Character. The code to run, which can consist of one or multiple statements.
 #'
@@ -107,10 +119,29 @@
 #'   end
 #'   "
 #' )
+#'
+#' # Set (and immediately check) the session configuration options
+#' nhsbsa_fabric_query(
+#' livy_url,
+#' conf = list(
+#'   "spark.sql.shuffle.partitions" = "500",
+#'   "spark.sql.autoBroadcastJoinThreshold" = "-1"
+#' ),
+#' kind = "pyspark",
+#' code = '
+#' spark.createDataFrame(
+#'     [(
+#'         spark.conf.get("spark.sql.shuffle.partitions"),
+#'         spark.conf.get("spark.sql.autoBroadcastJoinThreshold")
+#'     )],
+#'     ["shuffle_partitions", "autoBroadcastJoinThreshold"]
+#' )
+#'   '
+#' )
 #' }
 #'
 #' @export
-nhsbsa_fabric_query <- function(livy_url, kind, code) {
+nhsbsa_fabric_query <- function(livy_url, conf = NULL, kind, code) {
 
   if (!kind %in% c("sql", "pyspark")) {
     stop("`kind` must be either 'sql' or 'pyspark'.")
@@ -165,6 +196,7 @@ _pj_run(base64.b64decode("<<B64>>").decode("utf-8"))
   res <- fabricQueryR::fabric_livy_query(
     livy_url = livy_url,
     access_token = aad_token$credentials$access_token,
+    conf = conf,
     kind = kind,
     code = code
   )
