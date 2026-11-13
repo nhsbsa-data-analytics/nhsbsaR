@@ -2,26 +2,39 @@
 % Please edit documentation in R/nhsbsa_fabric_query.R
 \name{nhsbsa_fabric_query}
 \alias{nhsbsa_fabric_query}
-\title{Execute queries in a Fabric lakehouse via a livy endpoint}
+\title{Execute queries in a Fabric lakehouse via a Livy endpoint}
 \usage{
-nhsbsa_fabric_query(livy_url, kind, code)
+nhsbsa_fabric_query(livy_url, conf = NULL, kind, code)
 }
 \arguments{
 \item{livy_url}{Character. Lakehouse-specific endpoint. Obtained by opening a lakehouse in web UI -> settings cog on the left -> Livy endpoint -> Session job connection string}
+
+\item{conf}{A uniquely named list of single, non-missing strings, providing configuration options for a Spark session. Some commonly adjusted options include:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{list(
+  # Number of parallel partitions and tasks created when redistributing data across the cluster
+  # Default is 200, for large aggregations/joins could be raised to 500-2000
+  "spark.sql.shuffle.partitions" = "500",
+  # Byte-size limit below which smaller tables are automatically broadcast-joined
+  # Default is 26214400 bytes (25 MB), raising it can improve performance in some queries
+  # Can be passed in more convenient units, e.g. "100MB" or set to "-1" to disable if it becomes a problem
+  "spark.sql.autoBroadcastJoinThreshold" = "-1"
+)
+}\if{html}{\out{</div>}}}
 
 \item{kind}{Character. Only \code{"sql"} and \code{"pyspark"} are currently supported. In principle, \code{"sparkr"} and \code{"scala"} could be supported, but support is turned off, as it requires testing.}
 
 \item{code}{Character. The code to run, which can consist of one or multiple statements.}
 }
 \value{
-For blocks of code that have a table to return, a data.frame is returned.
+For blocks of code that have a table to return, a tibble is returned.
 For blocks of code that do not have a table to return (e.g. table creation statements), the code is executed in Spark and nothing is returned to R.
 This is handled automatically.
 
 Be mindful when querying tables such as \code{dwcp_clone.px_form_item_elem_comb_fact}, as without some kind of limiter (e.g. \code{.limit(n)}), R will choke.
 }
 \description{
-Execute queries in a Fabric lakehouse via a livy endpoint.
+Execute queries in a Fabric lakehouse via a Livy endpoint.
 Do not confuse with \code{con_nhsbsa_fabric()} which uses a SQL endpoint/ODBC, which is not suitable for large queries.
 This function uses proper Spark sessions akin to notebooks, and can execute any code you would execute in a notebook.
 }
@@ -30,7 +43,7 @@ Write lazy intermediate queries and pull the results into local R for checking o
 
 On first use you will be prompted to authenticate via https://login.microsoft.com/device. This will save an authentication token on your device, which will be re-used for a while, but will expire after some time, at which point you will have to re-authenticate.
 
-Each function call starts a Spark session, executes the code block, and stops the session. This means shared statements have to be repeated in each query, e.g. imports of Python packages and functions, or \code{spark.conf.set()} settings.
+Each function call starts a Spark session, executes the code block, and stops the session. This means shared statements have to be repeated in each query, e.g. imports of Python packages and functions, UDF definitions, variable declarations, etc.
 
 Code could be written as a string in the R script or read from a separate .py or .sql script using e.g. \code{readr::read_file()}. RStudio supports language-specific code highlighting in Python and SQL scripts.
 
@@ -116,6 +129,25 @@ code = "
     select * from dbo.my_table where year_month = ym limit 10;
   end
   "
+)
+
+# Set (and immediately check) the session configuration options
+nhsbsa_fabric_query(
+livy_url,
+conf = list(
+  "spark.sql.shuffle.partitions" = "500",
+  "spark.sql.autoBroadcastJoinThreshold" = "-1"
+),
+kind = "pyspark",
+code = '
+spark.createDataFrame(
+    [(
+        spark.conf.get("spark.sql.shuffle.partitions"),
+        spark.conf.get("spark.sql.autoBroadcastJoinThreshold")
+    )],
+    ["shuffle_partitions", "autoBroadcastJoinThreshold"]
+)
+  '
 )
 }
 

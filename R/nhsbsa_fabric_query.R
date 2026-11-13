@@ -1,6 +1,6 @@
-#' Execute queries in a Fabric lakehouse via a livy endpoint
+#' Execute queries in a Fabric lakehouse via a Livy endpoint
 #'
-#' Execute queries in a Fabric lakehouse via a livy endpoint.
+#' Execute queries in a Fabric lakehouse via a Livy endpoint.
 #' Do not confuse with `con_nhsbsa_fabric()` which uses a SQL endpoint/ODBC, which is not suitable for large queries.
 #' This function uses proper Spark sessions akin to notebooks, and can execute any code you would execute in a notebook.
 #'
@@ -9,7 +9,7 @@
 #'
 #' On first use you will be prompted to authenticate via https://login.microsoft.com/device. This will save an authentication token on your device, which will be re-used for a while, but will expire after some time, at which point you will have to re-authenticate.
 #'
-#' Each function call starts a Spark session, executes the code block, and stops the session. This means shared statements have to be repeated in each query, e.g. imports of Python packages and functions, or `spark.conf.set()` settings.
+#' Each function call starts a Spark session, executes the code block, and stops the session. This means shared statements have to be repeated in each query, e.g. imports of Python packages and functions, UDF definitions, variable declarations, etc.
 #'
 #' Code could be written as a string in the R script or read from a separate .py or .sql script using e.g. `readr::read_file()`. RStudio supports language-specific code highlighting in Python and SQL scripts.
 #'
@@ -18,11 +18,23 @@
 #' You need to have the `FABRICQUERYR_TENANT_ID` environment variable set in `.Renviron`. This is an identifier of NHSBSA's corporate account with Fabric. Can be obtained from https://app.fabric.microsoft.com -> Profile icon -> Exclamation mark near Tenant Name.
 #'
 #' @param livy_url Character. Lakehouse-specific endpoint. Obtained by opening a lakehouse in web UI -> settings cog on the left -> Livy endpoint -> Session job connection string
+#' @param conf A uniquely named list of single, non-missing strings, providing configuration options for a Spark session. Some commonly adjusted options include:
+#' ```
+#' list(
+#'   # Number of parallel partitions and tasks created when redistributing data across the cluster
+#'   # Default is 200, for large aggregations/joins could be raised to 500-2000
+#'   "spark.sql.shuffle.partitions" = "500",
+#'   # Byte-size limit below which smaller tables are automatically broadcast-joined
+#'   # Default is 26214400 bytes (25 MB), raising it can improve performance in some queries
+#'   # Can be passed in more convenient units, e.g. "100MB" or set to "-1" to disable if it becomes a problem
+#'   "spark.sql.autoBroadcastJoinThreshold" = "-1"
+#' )
+#' ```
 #' @param kind Character. Only `"sql"` and `"pyspark"` are currently supported. In principle, `"sparkr"` and `"scala"` could be supported, but support is turned off, as it requires testing.
 #' @param code Character. The code to run, which can consist of one or multiple statements.
 #'
 #' @return
-#' For blocks of code that have a table to return, a data.frame is returned.
+#' For blocks of code that have a table to return, a tibble is returned.
 #' For blocks of code that do not have a table to return (e.g. table creation statements), the code is executed in Spark and nothing is returned to R.
 #' This is handled automatically.
 #'
@@ -107,10 +119,29 @@
 #'   end
 #'   "
 #' )
+#'
+#' # Set (and immediately check) the session configuration options
+#' nhsbsa_fabric_query(
+#' livy_url,
+#' conf = list(
+#'   "spark.sql.shuffle.partitions" = "500",
+#'   "spark.sql.autoBroadcastJoinThreshold" = "-1"
+#' ),
+#' kind = "pyspark",
+#' code = '
+#' spark.createDataFrame(
+#'     [(
+#'         spark.conf.get("spark.sql.shuffle.partitions"),
+#'         spark.conf.get("spark.sql.autoBroadcastJoinThreshold")
+#'     )],
+#'     ["shuffle_partitions", "autoBroadcastJoinThreshold"]
+#' )
+#'   '
+#' )
 #' }
 #'
 #' @export
-nhsbsa_fabric_query <- function(livy_url, kind, code) {
+nhsbsa_fabric_query <- function(livy_url, conf = NULL, kind, code) {
 
   if (!kind %in% c("sql", "pyspark")) {
     stop("`kind` must be either 'sql' or 'pyspark'.")
@@ -123,7 +154,7 @@ nhsbsa_fabric_query <- function(livy_url, kind, code) {
     auth_type = "device_code"
   )
 
-  ## Wrap Pyspark code in a harness that runs it and, if the last statement is a
+  ## Wrap PySpark code in a harness that runs it and, if the last statement is a
   ## DataFrame, prints it as JSON between <<JSON>>/<<END>> markers for R to parse.
   if (kind == "pyspark") {
 
@@ -165,6 +196,7 @@ _pj_run(base64.b64decode("<<B64>>").decode("utf-8"))
   res <- fabricQueryR::fabric_livy_query(
     livy_url = livy_url,
     access_token = aad_token$credentials$access_token,
+    conf = conf,
     kind = kind,
     code = code
   )
@@ -173,7 +205,7 @@ _pj_run(base64.b64decode("<<B64>>").decode("utf-8"))
     stop(paste(res$output$ename, res$output$evalue, sep = ": "), call. = F)
   }
 
-  ## Parse Pyspark output
+  ## Parse PySpark output
   if (kind == "pyspark") {
 
     txt  <- res$output$data[["text/plain"]]
@@ -187,10 +219,11 @@ _pj_run(base64.b64decode("<<B64>>").decode("utf-8"))
   }
 
   # SQL: return an output if there is one to return
-  # (For Pyspark, the harness already has equivalent behaviour: returns JSON only when the last statement is a DataFrame)
+  # (For PySpark, the harness already has equivalent behaviour: returns JSON only when the last statement is a DataFrame)
 
   no_output_sql <- "\\b(create|alter|drop|truncate|insert|update|delete|merge|cache|uncache|refresh|repair|analyze|use|add\\s+(?:jar|file))\\b"
-  if ( kind == "sql" && !stringr::str_detect(code, stringr::regex(no_output_sql, ignore_case = T)) ) return(res$output$parsed)
+  if ( kind == "sql" && !stringr::str_detect(code, stringr::regex(no_output_sql, ignore_case = T)) )
+    return(res$output$parsed)
 
 
 }
