@@ -35,21 +35,21 @@ Be mindful when querying tables such as \code{dwcp_clone.px_form_item_elem_comb_
 }
 \description{
 Execute queries in a Fabric lakehouse via a Livy endpoint.
-Do not confuse with \code{con_nhsbsa_fabric()} which uses a SQL endpoint/ODBC, which is not suitable for large queries.
-This function uses proper Spark sessions akin to notebooks, and can execute any code you would execute in a notebook.
+Do not confuse with \code{con_nhsbsa_fabric()}, which uses a SQL endpoint/ODBC and is not suitable for large queries.
+This function uses proper Spark sessions, mirroring notebook behaviour, and can execute any code executable in a notebook.
 }
 \details{
-Write lazy intermediate queries and pull the results into local R for checking or write final queries and save the results in the lakehouse as tables.
+You need to have the \code{FABRICQUERYR_TENANT_ID} environment variable set in \code{.Renviron}. This is an identifier of NHSBSA's corporate account with Fabric. Can be obtained from \url{https://app.fabric.microsoft.com} -> Profile icon -> Exclamation mark near Tenant Name.
 
-On first use you will be prompted to authenticate via https://login.microsoft.com/device. This will save an authentication token on your device, which will be re-used for a while, but will expire after some time, at which point you will have to re-authenticate.
+On first use you will be prompted to authenticate via \url{https://login.microsoft.com/device}. This will save an authentication token on your device, which will be re-used for a while, but will expire after some time, at which point you will have to re-authenticate.
 
-Each function call starts a Spark session, executes the code block, and stops the session. This means shared statements have to be repeated in each query, e.g. imports of Python packages and functions, UDF definitions, variable declarations, etc.
+Execute 'lazy' intermediate queries and pull the results into local R for testing; or final queries with the results saved as lakehouse tables.
+
+Each function call starts a Spark session, executes the code, and stops the session. This means shared statements have to be repeated in each query, e.g. imports of Python packages and functions, UDF definitions, variable declarations, etc.
 
 Code could be written as a string in the R script or read from a separate .py or .sql script using e.g. \code{readr::read_file()}. RStudio supports language-specific code highlighting in Python and SQL scripts.
 
-The function is a wrapper around the \code{fabricQueryR} package.
-
-You need to have the \code{FABRICQUERYR_TENANT_ID} environment variable set in \code{.Renviron}. This is an identifier of NHSBSA's corporate account with Fabric. Can be obtained from https://app.fabric.microsoft.com -> Profile icon -> Exclamation mark near Tenant Name.
+The function is a wrapper around the \pkg{fabricQueryR} package, with authentication via \pkg{AzureAuth}.
 }
 \examples{
 \dontrun{
