@@ -142,11 +142,7 @@
 #' }
 #'
 #' @export
-nhsbsa_fabric_query <- function(livy_url, conf = NULL, kind, code) {
-
-  if (!kind %in% c("sql", "pyspark")) {
-    stop("`kind` must be either 'sql' or 'pyspark'.")
-  }
+nhsbsa_fabric_open_session <- function(livy_url, conf = NULL, high_concurrency = F) {
 
   aad_token <- AzureAuth::get_azure_token(
     resource  = "https://api.fabric.microsoft.com",
@@ -154,6 +150,25 @@ nhsbsa_fabric_query <- function(livy_url, conf = NULL, kind, code) {
     app       = "04b07795-8ddb-461a-bbee-02f9e1bf7b46",
     auth_type = "device_code"
   )
+
+  sess <- fabricQueryR::fabric_livy_session(
+    livy_url,
+    token = aad_token$credentials$access_token,
+    conf = conf,
+    high_concurrency = high_concurrency
+  )
+
+  sess$wait()
+
+  return(sess)
+
+}
+
+nhsbsa_fabric_query <- function(session, kind, code) {
+
+  if (!kind %in% c("sql", "pyspark")) {
+    stop("`kind` must be either 'sql' or 'pyspark'.")
+  }
 
   ## Wrap PySpark code in a harness that runs it and, if the last statement is a
   ## DataFrame, prints it as JSON between <<JSON>>/<<END>> markers for R to parse.
@@ -174,9 +189,6 @@ def _pj_run(src):
         last = eval(compile(tail, "<user>", "eval"), g)
     else:
         exec(compile(tree, "<user>", "exec"), g)
-        t = tree.body[-1] if tree.body else None
-        if isinstance(t, ast.Assign) and isinstance(t.targets[0], ast.Name):
-            last = g.get(t.targets[0].id)
     if isinstance(last, DataFrame):
         rows = last.collect()
         conv = lambda o: float(o) if isinstance(o, Decimal) else str(o)
@@ -193,11 +205,7 @@ _pj_run(base64.b64decode("<<B64>>").decode("utf-8"))
 
   }
 
-
-  res <- fabricQueryR::fabric_livy_query(
-    livy_url = livy_url,
-    access_token = aad_token$credentials$access_token,
-    conf = conf,
+  res <- session$run(
     kind = kind,
     code = code
   )
@@ -206,7 +214,7 @@ _pj_run(base64.b64decode("<<B64>>").decode("utf-8"))
     stop(paste(res$output$ename, res$output$evalue, sep = ": "), call. = F)
   }
 
-  ## Parse PySpark output
+  # Parse PySpark output
   if (kind == "pyspark") {
 
     txt  <- res$output$data[["text/plain"]]
@@ -223,5 +231,6 @@ _pj_run(base64.b64decode("<<B64>>").decode("utf-8"))
   # (For PySpark, the harness already has equivalent behaviour: returns JSON only when the last statement is a DataFrame)
   if ( kind == "sql" && any(dim(res$output$parsed) > 0) ) return(res$output$parsed)
 
-
 }
+
+nhsbsa_fabric_close_session <- function(session) {session$close()}
