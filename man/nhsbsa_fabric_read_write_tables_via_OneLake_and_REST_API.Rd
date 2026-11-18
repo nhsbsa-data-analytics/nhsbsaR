@@ -47,7 +47,7 @@ Ensure \code{reticulate} is pointed at the appropriate Python instance, e.g.
 
 \code{Sys.setenv(RETICULATE_PYTHON = "C:/ProgramData/Anaconda3/python.exe")}
 
-and that the Python environment has the required dependencies:
+...and that the Python environment has the required dependencies:
 
 \code{system2("C:/ProgramData/Anaconda3/python.exe", c("-m", "pip", "install", "deltalake==1.6.2", "nanoarrow==0.8.0"))}
 
@@ -56,14 +56,14 @@ Verify the above has worked: \code{fabricQueryR::fabric_delta_config(initialize 
 \examples{
 \dontrun{
 nhsbsa_fabric_write_table(
-  lakehouse = "dsaas_int752_lrs",
+  lakehouse = "dsaas_int999_xxx",
   schema = "dbo",
   table = "mtcars",
   data = mtcars
   )
 
 df <- nhsbsa_fabric_read_table(
-  lakehouse = "dsaas_int752_lrs",
+  lakehouse = "dsaas_int999_xxx",
   schema = "dbo",
   table = "mtcars"
   )
