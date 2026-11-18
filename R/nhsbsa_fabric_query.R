@@ -265,4 +265,13 @@ _pj_run(base64.b64decode("<<B64>>").decode("utf-8"))
 #' @rdname nhsbsa_fabric_session_functions
 #' @param session Session object created by `nhsbsa_fabric_open_session()`
 #' @export
-nhsbsa_fabric_close_session <- function(session) {session$close()}
+nhsbsa_fabric_close_session <- function(session) {
+
+  session$close()
+
+  rm(
+    list = substitute(session) |> as.character(),
+    envir = parent.frame()
+   )
+
+  }
