@@ -32,14 +32,14 @@
 #' @examples
 #' \dontrun{
 #' nhsbsa_fabric_write_table(
-#'   lakehouse = "dsaas_int752_lrs",
+#'   lakehouse = "dsaas_int999_xxx",
 #'   schema = "dbo",
 #'   table = "mtcars",
 #'   data = mtcars
 #'   )
 #'
 #' df <- nhsbsa_fabric_read_table(
-#'   lakehouse = "dsaas_int752_lrs",
+#'   lakehouse = "dsaas_int999_xxx",
 #'   schema = "dbo",
 #'   table = "mtcars"
 #'   )
