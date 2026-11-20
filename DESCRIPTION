@@ -1,6 +1,6 @@
 Package: nhsbsaR
 Title: NHSBSA R package
-Version: 0.0.0.9501
+Version: 0.0.0.9502
 Authors@R: person("NHS Business Services Authority", email = "DataLab@nhsbsa.nhs.uk", role = c("aut", "cre"))
 Description: Helper package for common NHSBSA R actions.
 License: Apache License (>= 2) + file LICENSE
@@ -31,9 +31,9 @@ Imports:
     readr,
     stringr,
     tibble
-Remotes: 
+Remotes:
     nhs-r-community/NHSRtheme
-Suggests: 
+Suggests:
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Config/roxygen2/version: 8.1.1

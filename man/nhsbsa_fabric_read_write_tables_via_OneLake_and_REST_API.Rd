@@ -36,9 +36,9 @@ These functions utilise a combination of OneLake API and REST API to read lakeho
 A Spark session is NOT required.
 }
 \details{
-You need to have the \code{FABRICQUERYR_TENANT_ID} environment variable set in \code{.Renviron}. This is an identifier of NHSBSA's corporate account with Fabric. Can be obtained from \url{https://app.fabric.microsoft.com} -> Profile icon -> Exclamation mark near Tenant Name.
+You need the \code{FABRICQUERYR_TENANT_ID} environment variable set in \code{.Renviron}. This is an identifier of NHSBSA's corporate account with Fabric. Can be obtained from \url{https://app.fabric.microsoft.com} -> Profile icon -> Exclamation mark near Tenant Name.
 
-On first use you will be prompted to authenticate via \url{https://login.microsoft.com/device}. This will save an authentication token on your device, which will be re-used for a while, but will expire after some time, at which point you will have to re-authenticate.
+You also need \code{FABRIC_USERNAME} and \code{FABRIC_password} environment variables, which are likely already in place for use in \code{con_nhsbsa_fabric()}.
 
 \code{nhsbsa_fabric_write_table()} depends on package \pkg{arrow} and uploads Parquet files to a staging area under \verb{Files/} via OneLake API, then converts them to a Delta table using REST API and cleans up the staging area.
 

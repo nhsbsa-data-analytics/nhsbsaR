@@ -5,9 +5,9 @@
 #' A Spark session is NOT required.
 #'
 #' @details
-#' You need to have the `FABRICQUERYR_TENANT_ID` environment variable set in `.Renviron`. This is an identifier of NHSBSA's corporate account with Fabric. Can be obtained from <https://app.fabric.microsoft.com> -> Profile icon -> Exclamation mark near Tenant Name.
+#' You need the `FABRICQUERYR_TENANT_ID` environment variable set in `.Renviron`. This is an identifier of NHSBSA's corporate account with Fabric. Can be obtained from <https://app.fabric.microsoft.com> -> Profile icon -> Exclamation mark near Tenant Name.
 #'
-#' On first use you will be prompted to authenticate via <https://login.microsoft.com/device>. This will save an authentication token on your device, which will be re-used for a while, but will expire after some time, at which point you will have to re-authenticate.
+#' You also need `FABRIC_USERNAME` and `FABRIC_password` environment variables, which are likely already in place for use in `con_nhsbsa_fabric()`.
 #'
 #' `nhsbsa_fabric_write_table()` depends on package \pkg{arrow} and uploads Parquet files to a staging area under `Files/` via OneLake API, then converts them to a Delta table using REST API and cleans up the staging area.
 #'
@@ -58,7 +58,12 @@ nhsbsa_fabric_read_table <- function(
   fabricQueryR::fabric_lakehouse_read_table(
     lakehouse = lakehouse,
     schema = schema,
-    table = table
+    table = table,
+    auth_args = list(
+      auth_type = "resource_owner",
+      username  = Sys.getenv("FABRIC_USERNAME"),
+      password  = Sys.getenv("FABRIC_PASSWORD")
+    )
   )
 
 }
@@ -82,7 +87,12 @@ nhsbsa_fabric_write_table <- function(
     schema = schema,
     table = table,
     data = data,
-    mode = mode
+    mode = mode,
+    auth_args = list(
+      auth_type = "resource_owner",
+      username  = Sys.getenv("FABRIC_USERNAME"),
+      password  = Sys.getenv("FABRIC_PASSWORD")
+    )
   )
 
   if (res$operation_status$status == "Succeeded") {
